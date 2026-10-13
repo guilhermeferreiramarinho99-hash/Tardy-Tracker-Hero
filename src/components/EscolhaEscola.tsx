@@ -21,7 +21,8 @@ export function EscolhaEscola({ sair }: { sair: () => Promise<void> }) {
         : await supabase.rpc("entrar_escola", { _codigo: valor.trim() });
       if (error) throw error;
       await qc.cancelQueries();
-      qc.clear();
+      qc.removeQueries({ predicate: (query) => query.queryKey[0] !== "me" });
+      await qc.invalidateQueries({ queryKey: ["me"] });
       toast.success(modo === "criar" ? "Escola cadastrada. Você é o administrador." : "Solicitação enviada à administração da escola.");
     } catch (error) { toast.error(erroAmigavel(error)); }
     finally { setEnviando(false); }
