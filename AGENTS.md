@@ -8,3 +8,5 @@
 > Commits you push to the connected branch sync back to Lovable and show up in
 > the editor, so keep the branch in a working state.
 <!-- LOVABLE:END -->
+
+- Stage 1 data lives in src/lib/store.tsx (browser-only demo store); replace with Lovable Cloud tables + RLS in stage 2 — real persistence and role security must be server-side.
