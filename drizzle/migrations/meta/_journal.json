@@ -8,6 +8,13 @@
       "when": 1791926692581,
       "tag": "0000_pontual_estrutura",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1791927012069,
+      "tag": "0001_reforco_permissoes",
+      "breakpoints": true
     }
   ]
 }
