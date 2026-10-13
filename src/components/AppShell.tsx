@@ -1,53 +1,93 @@
-import { Link } from "@tanstack/react-router";
-import { Bell, Clock, Home, Users } from "lucide-react";
+import { Link, useNavigate } from "@tanstack/react-router";
+import { useQueryClient } from "@tanstack/react-query";
+import { Bell, CalendarDays, Clock, Home, LogOut, Settings, Users, Hourglass } from "lucide-react";
 import type { ReactNode } from "react";
-import { useStore } from "@/lib/store";
+import { supabase } from "@/integrations/supabase/client";
+import { useAlertas, useMe } from "@/lib/api";
 
-const itens = [
-  { to: "/", label: "Início", icon: Home },
-  { to: "/registrar", label: "Registrar", icon: Clock },
-  { to: "/alunos", label: "Alunos", icon: Users },
-  { to: "/alertas", label: "Alertas", icon: Bell },
-] as const;
+export function useSair() {
+  const qc = useQueryClient();
+  const navigate = useNavigate();
+  return async () => {
+    await qc.cancelQueries();
+    qc.clear();
+    await supabase.auth.signOut();
+    navigate({ to: "/auth", replace: true });
+  };
+}
 
 export function AppShell({ children }: { children: ReactNode }) {
-  const { alertas } = useStore();
-  const pend = alertas.filter((a) => a.status === "pendente").length;
+  const { data: me, isLoading } = useMe();
+  const { data: alertas } = useAlertas(!!me?.isGestor);
+  const sair = useSair();
+  if (isLoading) return <div className="grid min-h-screen place-items-center text-muted-foreground">Carregando…</div>;
+  if (!me) return null;
+
+  if (me.roles.length === 0) {
+    return (
+      <div className="grid min-h-screen place-items-center p-6 text-center">
+        <div className="max-w-sm space-y-4">
+          <Hourglass className="mx-auto size-12 text-primary" />
+          <h1 className="text-2xl font-extrabold">Aguardando liberação</h1>
+          <p className="text-muted-foreground">Sua conta foi criada, mas ainda não tem um perfil de acesso. Peça à administração da escola para liberar seu acesso.</p>
+          <button onClick={sair} className="rounded-xl border bg-card px-5 py-3 font-bold">Sair</button>
+        </div>
+      </div>
+    );
+  }
+
+  const pend = (alertas ?? []).filter((a) => a.status === "pendente").length;
+  const itens = [
+    me.isStaff && { to: "/inicio", label: "Início", icon: Home },
+    me.isStaff && { to: "/registrar", label: "Registrar", icon: Clock },
+    me.isStaff && { to: "/alunos", label: "Alunos", icon: Users },
+    me.isGestor && { to: "/alertas", label: "Alertas", icon: Bell, badge: pend },
+    me.isAdmin && { to: "/admin", label: "Admin", icon: Settings },
+    me.isAluno && !me.isStaff && { to: "/meu-historico", label: "Meu histórico", icon: CalendarDays },
+  ].filter(Boolean) as { to: "/inicio"; label: string; icon: typeof Home; badge?: number }[];
+
   return (
     <div className="min-h-screen md:flex">
-      <aside className="no-print hidden md:flex md:w-64 md:flex-col bg-navy text-navy-foreground p-5 gap-2 sticky top-0 h-screen">
-        <div className="text-2xl font-extrabold mb-6">Pontual<span className="text-justified">+</span></div>
-        {itens.map(({ to, label, icon: Icon }) => (
-          <Link key={to} to={to} activeOptions={{ exact: to === "/" }}
-            className="flex items-center gap-3 rounded-xl px-4 py-3 text-base font-semibold opacity-80 hover:opacity-100 hover:bg-primary/40"
+      <aside className="no-print sticky top-0 hidden h-screen flex-col gap-2 bg-navy p-5 text-navy-foreground md:flex md:w-64">
+        <div className="mb-6 text-2xl font-extrabold">Pontual<span className="text-justified">+</span></div>
+        {itens.map(({ to, label, icon: Icon, badge }) => (
+          <Link key={to} to={to} className="flex items-center gap-3 rounded-xl px-4 py-3 text-base font-semibold opacity-80 hover:bg-primary/40 hover:opacity-100"
             activeProps={{ className: "bg-primary opacity-100" }}>
             <Icon className="size-5" /> {label}
-            {to === "/alertas" && pend > 0 && <span className="ml-auto rounded-full bg-late px-2 text-sm">{pend}</span>}
+            {!!badge && <span className="ml-auto rounded-full bg-late px-2 text-sm">{badge}</span>}
           </Link>
         ))}
-        <p className="mt-auto text-xs opacity-60">Versão de demonstração · dados fictícios</p>
+        <div className="mt-auto space-y-2 text-sm">
+          <div className="opacity-70">{me.nome}</div>
+          <button onClick={sair} className="flex items-center gap-2 font-semibold opacity-80 hover:opacity-100"><LogOut className="size-4" /> Sair</button>
+        </div>
       </aside>
       <main className="flex-1 pb-24 md:pb-8">{children}</main>
-      <nav className="no-print md:hidden fixed bottom-0 inset-x-0 z-40 bg-card border-t grid grid-cols-4 pb-[env(safe-area-inset-bottom)]">
-        {itens.map(({ to, label, icon: Icon }) => (
-          <Link key={to} to={to} activeOptions={{ exact: to === "/" }}
-            className="relative flex flex-col items-center gap-1 py-3 text-xs font-semibold text-muted-foreground"
-            activeProps={{ className: "text-primary" }}>
-            <Icon className="size-6" /> {label}
-            {to === "/alertas" && pend > 0 && <span className="absolute top-1.5 right-1/4 rounded-full bg-late text-primary-foreground px-1.5 text-[10px]">{pend}</span>}
-          </Link>
-        ))}
-      </nav>
+      {itens.length > 1 && (
+        <nav className="no-print fixed inset-x-0 bottom-0 z-40 flex border-t bg-card pb-[env(safe-area-inset-bottom)] md:hidden">
+          {itens.map(({ to, label, icon: Icon, badge }) => (
+            <Link key={to} to={to} className="relative flex flex-1 flex-col items-center gap-1 py-3 text-xs font-semibold text-muted-foreground"
+              activeProps={{ className: "text-primary" }}>
+              <Icon className="size-6" /> {label}
+              {!!badge && <span className="absolute right-1/4 top-1.5 rounded-full bg-late px-1.5 text-[10px] text-primary-foreground">{badge}</span>}
+            </Link>
+          ))}
+        </nav>
+      )}
     </div>
   );
 }
 
 export function PageHeader({ title, subtitle, children }: { title: string; subtitle?: string; children?: ReactNode }) {
+  const sair = useSair();
   return (
-    <header className="bg-hero text-navy-foreground px-5 pt-8 pb-10 md:rounded-b-3xl">
+    <header className="bg-hero px-5 pb-10 pt-8 text-navy-foreground md:rounded-b-3xl">
       <div className="mx-auto max-w-5xl">
-        <div className="md:hidden text-sm font-bold opacity-80 mb-2">Pontual<span className="text-justified">+</span></div>
-        <h1 className="text-2xl md:text-3xl font-extrabold">{title}</h1>
+        <div className="mb-2 flex items-center justify-between md:hidden">
+          <span className="text-sm font-bold opacity-80">Pontual<span className="text-justified">+</span></span>
+          <button onClick={sair} className="no-print flex items-center gap-1 text-sm font-semibold opacity-80"><LogOut className="size-4" /> Sair</button>
+        </div>
+        <h1 className="text-2xl font-extrabold md:text-3xl">{title}</h1>
         {subtitle && <p className="mt-1 opacity-80">{subtitle}</p>}
         {children}
       </div>
@@ -65,5 +105,18 @@ export function Status({ tipo }: { tipo: "late" | "justified" | "ok" }) {
     <span className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-sm font-bold ${m[0]}`}>
       <span className="size-2 rounded-full bg-current" /> {m[1]}
     </span>
+  );
+}
+
+export function SemPermissao() {
+  return <div className="p-8 text-center text-muted-foreground">Você não tem permissão para acessar esta tela.</div>;
+}
+
+export function Box({ n, l, c = "" }: { n: number; l: string; c?: string }) {
+  return (
+    <div className="rounded-2xl border bg-card p-4">
+      <div className={`text-3xl font-extrabold ${c}`}>{n}</div>
+      <div className="text-sm font-semibold text-muted-foreground">{l}</div>
+    </div>
   );
 }

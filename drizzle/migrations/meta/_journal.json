@@ -1,0 +1,27 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1791926692581,
+      "tag": "0000_pontual_estrutura",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1791927012069,
+      "tag": "0001_reforco_permissoes",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1791927041573,
+      "tag": "0002_revogar_funcoes_anonimas",
+      "breakpoints": true
+    }
+  ]
+}

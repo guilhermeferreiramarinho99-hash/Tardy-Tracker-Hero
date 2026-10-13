@@ -10,73 +10,157 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as AlertasRouteImport } from './routes/alertas'
-import { Route as RegistrarRouteImport } from './routes/registrar'
-import { Route as AlunosIndexRouteImport } from './routes/alunos.index'
-import { Route as AlunosIdRouteImport } from './routes/alunos.$id'
+import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
+import { Route as AuthRouteImport } from './routes/auth'
+import { Route as ResetPasswordRouteImport } from './routes/reset-password'
+import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
+import { Route as AuthenticatedAlertasRouteImport } from './routes/_authenticated/alertas'
+import { Route as AuthenticatedInicioRouteImport } from './routes/_authenticated/inicio'
+import { Route as AuthenticatedMeuHistoricoRouteImport } from './routes/_authenticated/meu-historico'
+import { Route as AuthenticatedRegistrarRouteImport } from './routes/_authenticated/registrar'
+import { Route as AuthenticatedAlunosIndexRouteImport } from './routes/_authenticated/alunos.index'
+import { Route as AuthenticatedAlunosIdRouteImport } from './routes/_authenticated/alunos.$id'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AlertasRoute = AlertasRouteImport.update({
+const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
+  id: '/_authenticated',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ResetPasswordRoute = ResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedAlertasRoute = AuthenticatedAlertasRouteImport.update({
   id: '/alertas',
   path: '/alertas',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
-const RegistrarRoute = RegistrarRouteImport.update({
+const AuthenticatedInicioRoute = AuthenticatedInicioRouteImport.update({
+  id: '/inicio',
+  path: '/inicio',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedMeuHistoricoRoute =
+  AuthenticatedMeuHistoricoRouteImport.update({
+    id: '/meu-historico',
+    path: '/meu-historico',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedRegistrarRoute = AuthenticatedRegistrarRouteImport.update({
   id: '/registrar',
   path: '/registrar',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
-const AlunosIndexRoute = AlunosIndexRouteImport.update({
-  id: '/alunos/',
-  path: '/alunos/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AlunosIdRoute = AlunosIdRouteImport.update({
+const AuthenticatedAlunosIndexRoute =
+  AuthenticatedAlunosIndexRouteImport.update({
+    id: '/alunos/',
+    path: '/alunos/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedAlunosIdRoute = AuthenticatedAlunosIdRouteImport.update({
   id: '/alunos/$id',
   path: '/alunos/$id',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/alertas': typeof AlertasRoute
-  '/registrar': typeof RegistrarRoute
-  '/alunos/$id': typeof AlunosIdRoute
-  '/alunos/': typeof AlunosIndexRoute
+  '/auth': typeof AuthRoute
+  '/reset-password': typeof ResetPasswordRoute
+  '/admin': typeof AuthenticatedAdminRoute
+  '/alertas': typeof AuthenticatedAlertasRoute
+  '/inicio': typeof AuthenticatedInicioRoute
+  '/meu-historico': typeof AuthenticatedMeuHistoricoRoute
+  '/registrar': typeof AuthenticatedRegistrarRoute
+  '/alunos/$id': typeof AuthenticatedAlunosIdRoute
+  '/alunos/': typeof AuthenticatedAlunosIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/alertas': typeof AlertasRoute
-  '/registrar': typeof RegistrarRoute
-  '/alunos/$id': typeof AlunosIdRoute
-  '/alunos': typeof AlunosIndexRoute
+  '/auth': typeof AuthRoute
+  '/reset-password': typeof ResetPasswordRoute
+  '/admin': typeof AuthenticatedAdminRoute
+  '/alertas': typeof AuthenticatedAlertasRoute
+  '/inicio': typeof AuthenticatedInicioRoute
+  '/meu-historico': typeof AuthenticatedMeuHistoricoRoute
+  '/registrar': typeof AuthenticatedRegistrarRoute
+  '/alunos/$id': typeof AuthenticatedAlunosIdRoute
+  '/alunos': typeof AuthenticatedAlunosIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/alertas': typeof AlertasRoute
-  '/registrar': typeof RegistrarRoute
-  '/alunos/$id': typeof AlunosIdRoute
-  '/alunos/': typeof AlunosIndexRoute
+  '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
+  '/auth': typeof AuthRoute
+  '/reset-password': typeof ResetPasswordRoute
+  '/_authenticated/admin': typeof AuthenticatedAdminRoute
+  '/_authenticated/alertas': typeof AuthenticatedAlertasRoute
+  '/_authenticated/inicio': typeof AuthenticatedInicioRoute
+  '/_authenticated/meu-historico': typeof AuthenticatedMeuHistoricoRoute
+  '/_authenticated/registrar': typeof AuthenticatedRegistrarRoute
+  '/_authenticated/alunos/$id': typeof AuthenticatedAlunosIdRoute
+  '/_authenticated/alunos/': typeof AuthenticatedAlunosIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/alertas' | '/registrar' | '/alunos/$id' | '/alunos/'
+  fullPaths:
+    | '/'
+    | '/auth'
+    | '/reset-password'
+    | '/admin'
+    | '/alertas'
+    | '/inicio'
+    | '/meu-historico'
+    | '/registrar'
+    | '/alunos/$id'
+    | '/alunos/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/alertas' | '/registrar' | '/alunos/$id' | '/alunos'
-  id: '__root__' | '/' | '/alertas' | '/registrar' | '/alunos/$id' | '/alunos/'
+  to:
+    | '/'
+    | '/auth'
+    | '/reset-password'
+    | '/admin'
+    | '/alertas'
+    | '/inicio'
+    | '/meu-historico'
+    | '/registrar'
+    | '/alunos/$id'
+    | '/alunos'
+  id:
+    | '__root__'
+    | '/'
+    | '/_authenticated'
+    | '/auth'
+    | '/reset-password'
+    | '/_authenticated/admin'
+    | '/_authenticated/alertas'
+    | '/_authenticated/inicio'
+    | '/_authenticated/meu-historico'
+    | '/_authenticated/registrar'
+    | '/_authenticated/alunos/$id'
+    | '/_authenticated/alunos/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  AlertasRoute: typeof AlertasRoute
-  RegistrarRoute: typeof RegistrarRoute
-  AlunosIdRoute: typeof AlunosIdRoute
-  AlunosIndexRoute: typeof AlunosIndexRoute
+  AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
+  AuthRoute: typeof AuthRoute
+  ResetPasswordRoute: typeof ResetPasswordRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -88,43 +172,107 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/alertas': {
-      id: '/alertas'
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reset-password': {
+      id: '/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof ResetPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/admin': {
+      id: '/_authenticated/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AuthenticatedAdminRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/alertas': {
+      id: '/_authenticated/alertas'
       path: '/alertas'
       fullPath: '/alertas'
-      preLoaderRoute: typeof AlertasRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof AuthenticatedAlertasRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/registrar': {
-      id: '/registrar'
+    '/_authenticated/inicio': {
+      id: '/_authenticated/inicio'
+      path: '/inicio'
+      fullPath: '/inicio'
+      preLoaderRoute: typeof AuthenticatedInicioRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/meu-historico': {
+      id: '/_authenticated/meu-historico'
+      path: '/meu-historico'
+      fullPath: '/meu-historico'
+      preLoaderRoute: typeof AuthenticatedMeuHistoricoRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/registrar': {
+      id: '/_authenticated/registrar'
       path: '/registrar'
       fullPath: '/registrar'
-      preLoaderRoute: typeof RegistrarRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof AuthenticatedRegistrarRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/alunos/': {
-      id: '/alunos/'
+    '/_authenticated/alunos/': {
+      id: '/_authenticated/alunos/'
       path: '/alunos'
       fullPath: '/alunos/'
-      preLoaderRoute: typeof AlunosIndexRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof AuthenticatedAlunosIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/alunos/$id': {
-      id: '/alunos/$id'
+    '/_authenticated/alunos/$id': {
+      id: '/_authenticated/alunos/$id'
       path: '/alunos/$id'
       fullPath: '/alunos/$id'
-      preLoaderRoute: typeof AlunosIdRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof AuthenticatedAlunosIdRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
   }
 }
 
+interface AuthenticatedRouteRouteChildren {
+  AuthenticatedAdminRoute: typeof AuthenticatedAdminRoute
+  AuthenticatedAlertasRoute: typeof AuthenticatedAlertasRoute
+  AuthenticatedInicioRoute: typeof AuthenticatedInicioRoute
+  AuthenticatedMeuHistoricoRoute: typeof AuthenticatedMeuHistoricoRoute
+  AuthenticatedRegistrarRoute: typeof AuthenticatedRegistrarRoute
+  AuthenticatedAlunosIdRoute: typeof AuthenticatedAlunosIdRoute
+  AuthenticatedAlunosIndexRoute: typeof AuthenticatedAlunosIndexRoute
+}
+
+const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedAdminRoute: AuthenticatedAdminRoute,
+  AuthenticatedAlertasRoute: AuthenticatedAlertasRoute,
+  AuthenticatedInicioRoute: AuthenticatedInicioRoute,
+  AuthenticatedMeuHistoricoRoute: AuthenticatedMeuHistoricoRoute,
+  AuthenticatedRegistrarRoute: AuthenticatedRegistrarRoute,
+  AuthenticatedAlunosIdRoute: AuthenticatedAlunosIdRoute,
+  AuthenticatedAlunosIndexRoute: AuthenticatedAlunosIndexRoute,
+}
+
+const AuthenticatedRouteRouteWithChildren =
+  AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  AlertasRoute: AlertasRoute,
-  RegistrarRoute: RegistrarRoute,
-  AlunosIdRoute: AlunosIdRoute,
-  AlunosIndexRoute: AlunosIndexRoute,
+  AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
+  AuthRoute: AuthRoute,
+  ResetPasswordRoute: ResetPasswordRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
