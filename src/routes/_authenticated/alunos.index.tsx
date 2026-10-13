@@ -1,11 +1,12 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { Search } from "lucide-react";
+import { pageHead } from "@/lib/page-head";
 import { PageHeader, SemPermissao, Status } from "@/components/AppShell";
 import { hojeISO, periodoDe, useAlunos, useAtrasos, useMe, usePeriodos, useTurmas } from "@/lib/api";
 
 export const Route = createFileRoute("/_authenticated/alunos/")({
-  head: () => ({ meta: [{ title: "Alunos — Pontual+" }, { name: "description", content: "Pesquise alunos e consulte históricos." }] }),
+  head: () => pageHead("Alunos", "Consulta protegida de alunos e históricos da sua escola no Pontual+."),
   component: Alunos,
 });
 

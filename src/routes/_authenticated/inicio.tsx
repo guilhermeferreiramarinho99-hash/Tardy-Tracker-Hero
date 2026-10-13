@@ -1,10 +1,11 @@
 import { createFileRoute, Link, Navigate } from "@tanstack/react-router";
 import { Bell, Clock, Users } from "lucide-react";
+import { pageHead } from "@/lib/page-head";
 import { PageHeader, Box } from "@/components/AppShell";
 import { fmtData, fmtHora, hojeISO, periodoDe, useAlertas, useAlunos, useAtrasos, useMe, usePeriodos } from "@/lib/api";
 
 export const Route = createFileRoute("/_authenticated/inicio")({
-  head: () => ({ meta: [{ title: "Início — Pontual+" }, { name: "description", content: "Resumo do dia no Pontual+." }] }),
+  head: () => pageHead("Início", "Resumo dos atrasos e alertas da sua escola no Pontual+."),
   component: Inicio,
 });
 

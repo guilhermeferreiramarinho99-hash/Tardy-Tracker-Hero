@@ -1,9 +1,10 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowLeft } from "lucide-react";
 import { Historico } from "@/components/Historico";
+import { pageHead } from "@/lib/page-head";
 
 export const Route = createFileRoute("/_authenticated/alunos/$id")({
-  head: () => ({ meta: [{ title: "Histórico do aluno — Pontual+" }, { name: "robots", content: "noindex" }] }),
+  head: () => pageHead("Histórico do aluno", "Histórico e calendário de atrasos do aluno, com acesso autorizado no Pontual+."),
   component: Pagina,
 });
 

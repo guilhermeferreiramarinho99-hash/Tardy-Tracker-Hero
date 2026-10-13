@@ -5,10 +5,11 @@ import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { PageHeader, SemPermissao } from "@/components/AppShell";
 import { EscolaAdmin, TurmasAdmin } from "@/components/EscolaAdmin";
+import { pageHead } from "@/lib/page-head";
 import { erroAmigavel, fmtData, hojeISO, papelNome, useAlunos, useConfig, useMe, usePeriodos, useTurmas, type Papel } from "@/lib/api";
 
 export const Route = createFileRoute("/_authenticated/admin")({
-  head: () => ({ meta: [{ title: "Administração — Pontual+" }, { name: "robots", content: "noindex" }] }),
+  head: () => pageHead("Administração", "Administre os acessos, as turmas e as regras da sua escola no Pontual+."),
   component: Admin,
 });
 
