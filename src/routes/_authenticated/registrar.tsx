@@ -5,7 +5,8 @@ import { toast } from "sonner";
 import { AlertTriangle, CheckCircle2, Search } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { PageHeader, SemPermissao } from "@/components/AppShell";
-import { erroAmigavel, fmtData, hojeISO, useAlunos, useMe, useTurmas } from "@/lib/api";
+import { ehErroDeRede, enfileirar, estaSemInternet } from "@/lib/fila";
+import { erroAmigavel, fmtData, hojeISO, horaAtual, useAlunos, useMe, useTurmas } from "@/lib/api";
 
 export const Route = createFileRoute("/_authenticated/registrar")({
   head: () => ({ meta: [{ title: "Registrar atraso — Pontual+" }, { name: "description", content: "Registre o atraso de um aluno." }] }),
@@ -34,18 +35,41 @@ function Registrar() {
   const aluno = alunos?.find((a) => a.id === alunoId);
   const nomeTurma = (id: string) => turmas?.find((t) => t.id === id)?.nome ?? "";
 
-  const confirmar = async () => {
-    if (!aluno || just === null || enviando) return;
-    setEnviando(true);
-    const { data, error } = await supabase.rpc("registrar_atraso", { _aluno: aluno.id, _justificado: just, _observacao: obs.trim() });
+  const limpar = () => { setAlunoId(""); setJust(null); setObs(""); setBusca(""); };
+
+  // Sem sinal, o atraso fica guardado neste aparelho e é enviado quando a conexão voltar.
+  const guardarSemInternet = async (a: { id: string; nome: string; turma_id: string }) => {
+    if (!me) return;
+    await enfileirar({
+      id: crypto.randomUUID(), userId: me.id, alunoId: a.id, alunoNome: a.nome,
+      turmaNome: nomeTurma(a.turma_id), justificado: just === true, observacao: obs.trim(),
+      data: hojeISO(), hora: horaAtual(), criadoEm: new Date().toISOString(),
+    });
     setEnviando(false);
-    if (error) { toast.error(erroAmigavel(error)); return; }
-    const r = data as { quantidade: number; alerta_novo: boolean };
-    toast.success(`Atraso de ${aluno.nome} registrado.`);
-    if (r.alerta_novo) setAlerta({ aluno: aluno.nome, alunoId: aluno.id, turma: nomeTurma(aluno.turma_id), quantidade: r.quantidade });
-    setAlunoId(""); setJust(null); setObs(""); setBusca("");
-    qc.invalidateQueries({ queryKey: ["atrasos"] });
-    qc.invalidateQueries({ queryKey: ["alertas"] });
+    toast.info(`Sem internet: o atraso de ${a.nome} ficou guardado neste celular e será enviado quando a conexão voltar.`);
+    limpar();
+  };
+
+  const confirmar = async () => {
+    if (!aluno || just === null || enviando || !me) return;
+    setEnviando(true);
+    if (estaSemInternet()) { await guardarSemInternet(aluno); return; }
+    try {
+      const { data, error } = await supabase.rpc("registrar_atraso", { _aluno: aluno.id, _justificado: just, _observacao: obs.trim() });
+      if (error && ehErroDeRede(error)) throw error;
+      setEnviando(false);
+      if (error) { toast.error(erroAmigavel(error)); return; }
+      const r = data as { quantidade: number; alerta_novo: boolean };
+      toast.success(`Atraso de ${aluno.nome} registrado.`);
+      if (r.alerta_novo) setAlerta({ aluno: aluno.nome, alunoId: aluno.id, turma: nomeTurma(aluno.turma_id), quantidade: r.quantidade });
+      limpar();
+      qc.invalidateQueries({ queryKey: ["atrasos"] });
+      qc.invalidateQueries({ queryKey: ["alertas"] });
+    } catch (e) {
+      if (ehErroDeRede(e)) { await guardarSemInternet(aluno); return; }
+      setEnviando(false);
+      toast.error(erroAmigavel(e));
+    }
   };
 
   return (
