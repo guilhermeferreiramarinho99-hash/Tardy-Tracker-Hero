@@ -1,9 +1,10 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Historico } from "@/components/Historico";
+import { pageHead } from "@/lib/page-head";
 import { useAlunos, useMe } from "@/lib/api";
 
 export const Route = createFileRoute("/_authenticated/meu-historico")({
-  head: () => ({ meta: [{ title: "Meu histórico — Pontual+" }, { name: "robots", content: "noindex" }] }),
+  head: () => pageHead("Meu histórico", "Consulta individual dos seus atrasos e calendário no Pontual+."),
   component: Meu,
 });
 

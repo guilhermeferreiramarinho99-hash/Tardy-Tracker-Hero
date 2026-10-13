@@ -39,13 +39,18 @@ export function useMe() {
       const { data } = await supabase.auth.getUser();
       const user = data.user;
       if (!user) return null;
-      const [prof, roles] = await Promise.all([
+      const [prof, roles, escola] = await Promise.all([
         supabase.from("profiles").select("nome,email").eq("id", user.id).maybeSingle(),
         supabase.from("user_roles").select("role").eq("user_id", user.id),
+        supabase.from("escolas").select("id,nome").maybeSingle(),
       ]);
+      if (prof.error) throw prof.error;
+      if (roles.error) throw roles.error;
+      if (escola.error) throw escola.error;
       const r = (roles.data ?? []).map((x) => x.role as Papel);
       return {
         id: user.id,
+        escola: escola.data,
         nome: prof.data?.nome || user.email || "Usuário",
         roles: r,
         isAdmin: r.includes("admin"),
@@ -70,7 +75,7 @@ export const useConfig = () =>
   useQuery({
     queryKey: ["config"],
     queryFn: async () => {
-      const r = await supabase.from("config").select("*").eq("id", 1).single();
+      const r = await supabase.from("escola_config").select("*").single();
       if (r.error) throw r.error;
       return r.data;
     },

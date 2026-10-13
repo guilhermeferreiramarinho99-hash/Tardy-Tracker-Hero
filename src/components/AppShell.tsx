@@ -4,6 +4,8 @@ import { Bell, CalendarDays, Clock, Home, LogOut, Settings, Users, Hourglass } f
 import type { ReactNode } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAlertas, useMe } from "@/lib/api";
+import { EscolhaEscola } from "@/components/EscolhaEscola";
+import { Button } from "@/components/ui/button";
 
 export function useSair() {
   const qc = useQueryClient();
@@ -17,11 +19,13 @@ export function useSair() {
 }
 
 export function AppShell({ children }: { children: ReactNode }) {
-  const { data: me, isLoading } = useMe();
+  const { data: me, isLoading, isError, refetch } = useMe();
   const { data: alertas } = useAlertas(!!me?.isGestor);
   const sair = useSair();
   if (isLoading) return <div className="grid min-h-screen place-items-center text-muted-foreground">Carregando…</div>;
+  if (isError) return <div className="grid min-h-screen place-items-center p-6"><Button onClick={() => refetch()}>Tentar carregar sua escola novamente</Button></div>;
   if (!me) return null;
+  if (!me.escola) return <EscolhaEscola sair={sair} />;
 
   if (me.roles.length === 0) {
     return (
@@ -29,6 +33,7 @@ export function AppShell({ children }: { children: ReactNode }) {
         <div className="max-w-sm space-y-4">
           <Hourglass className="mx-auto size-12 text-primary" />
           <h1 className="text-2xl font-extrabold">Aguardando liberação</h1>
+          <p className="font-bold">{me.escola.nome}</p>
           <p className="text-muted-foreground">Sua conta foi criada, mas ainda não tem um perfil de acesso. Peça à administração da escola para liberar seu acesso.</p>
           <button onClick={sair} className="rounded-xl border bg-card px-5 py-3 font-bold">Sair</button>
         </div>
@@ -50,6 +55,7 @@ export function AppShell({ children }: { children: ReactNode }) {
     <div className="min-h-screen md:flex">
       <aside className="no-print sticky top-0 hidden h-screen flex-col gap-2 bg-navy p-5 text-navy-foreground md:flex md:w-64">
         <div className="mb-6 text-2xl font-extrabold">Pontual<span className="text-justified">+</span></div>
+        <div className="mb-4 break-words font-semibold">{me.escola.nome}</div>
         {itens.map(({ to, label, icon: Icon, badge }) => (
           <Link key={to} to={to} className="flex items-center gap-3 rounded-xl px-4 py-3 text-base font-semibold opacity-80 hover:bg-primary/40 hover:opacity-100"
             activeProps={{ className: "bg-primary opacity-100" }}>
@@ -80,6 +86,7 @@ export function AppShell({ children }: { children: ReactNode }) {
 
 export function PageHeader({ title, subtitle, children }: { title: string; subtitle?: string; children?: ReactNode }) {
   const sair = useSair();
+  const { data: me } = useMe();
   return (
     <header className="bg-hero px-5 pb-10 pt-8 text-navy-foreground md:rounded-b-3xl">
       <div className="mx-auto max-w-5xl">
@@ -88,6 +95,7 @@ export function PageHeader({ title, subtitle, children }: { title: string; subti
           <button onClick={sair} className="no-print flex items-center gap-1 text-sm font-semibold opacity-80"><LogOut className="size-4" /> Sair</button>
         </div>
         <h1 className="text-2xl font-extrabold md:text-3xl">{title}</h1>
+        {me?.escola && <p className="mt-2 break-words text-sm font-semibold">{me.escola.nome}</p>}
         {subtitle && <p className="mt-1 opacity-80">{subtitle}</p>}
         {children}
       </div>

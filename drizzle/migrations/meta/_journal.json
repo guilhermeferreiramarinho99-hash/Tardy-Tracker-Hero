@@ -43,6 +43,13 @@
       "when": 1791932496740,
       "tag": "0005_restrigir_leitura_cadastros",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1791933996906,
+      "tag": "0006_escolas_independentes",
+      "breakpoints": true
     }
   ]
 }

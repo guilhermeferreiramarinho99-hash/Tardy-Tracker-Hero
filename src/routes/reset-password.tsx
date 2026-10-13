@@ -10,6 +10,8 @@ export const Route = createFileRoute("/reset-password")({
       { name: "description", content: "Crie uma nova senha para sua conta Pontual+." },
       { property: "og:title", content: "Nova senha — Pontual+" },
       { property: "og:description", content: "Crie uma nova senha para sua conta Pontual+." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
     ],
   }),
   component: Reset,

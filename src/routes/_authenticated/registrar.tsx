@@ -6,10 +6,11 @@ import { AlertTriangle, CheckCircle2, Search } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { PageHeader, SemPermissao } from "@/components/AppShell";
 import { ehErroDeRede, enfileirar, estaSemInternet } from "@/lib/fila";
+import { pageHead } from "@/lib/page-head";
 import { erroAmigavel, fmtData, hojeISO, horaAtual, useAlunos, useMe, useTurmas } from "@/lib/api";
 
 export const Route = createFileRoute("/_authenticated/registrar")({
-  head: () => ({ meta: [{ title: "Registrar atraso — Pontual+" }, { name: "description", content: "Registre o atraso de um aluno." }] }),
+  head: () => pageHead("Registrar atraso", "Registro autorizado de atrasos escolares no Pontual+."),
   component: Registrar,
 });
 

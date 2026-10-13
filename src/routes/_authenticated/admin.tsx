@@ -4,14 +4,16 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { PageHeader, SemPermissao } from "@/components/AppShell";
+import { EscolaAdmin, TurmasAdmin } from "@/components/EscolaAdmin";
+import { pageHead } from "@/lib/page-head";
 import { erroAmigavel, fmtData, hojeISO, papelNome, useAlunos, useConfig, useMe, usePeriodos, useTurmas, type Papel } from "@/lib/api";
 
 export const Route = createFileRoute("/_authenticated/admin")({
-  head: () => ({ meta: [{ title: "Administração — Pontual+" }, { name: "robots", content: "noindex" }] }),
+  head: () => pageHead("Administração", "Administre os acessos, as turmas e as regras da sua escola no Pontual+."),
   component: Admin,
 });
 
-const abas = ["Usuários", "Alunos", "Bimestres", "Regras", "Auditoria"] as const;
+const abas = ["Escola", "Usuários", "Turmas", "Alunos", "Bimestres", "Regras", "Auditoria"] as const;
 const input = "rounded-xl border bg-card px-3 py-3";
 
 function Admin() {
@@ -28,6 +30,8 @@ function Admin() {
           ))}
         </div>
         <section className="rounded-2xl border bg-card p-5">
+          {aba === "Escola" && <EscolaAdmin />}
+          {aba === "Turmas" && <TurmasAdmin />}
           {aba === "Usuários" && <Usuarios meuId={me?.id} />}
           {aba === "Alunos" && <AlunosAdmin />}
           {aba === "Bimestres" && <Bimestres />}
@@ -66,7 +70,7 @@ function Usuarios({ meuId }: { meuId: string | undefined }) {
   };
   return (
     <div className="space-y-4">
-      <p className="text-sm text-muted-foreground">Cada pessoa cria sua conta na tela de entrada. Depois, marque aqui o perfil de acesso. Sem perfil, a pessoa não vê nenhum dado.</p>
+      <p className="text-sm text-muted-foreground">Solicitações da sua escola</p>
       <ul className="divide-y">
         {data?.map((u) => (
           <li key={u.id} className="space-y-2 py-4">
@@ -230,7 +234,7 @@ function Regras() {
   const l = limite ?? c.limite;
   const j = contar ?? c.contar_justificados;
   const salvar = async () => {
-    const { error } = await supabase.from("config").update({ limite: l, contar_justificados: j }).eq("id", 1);
+    const { error } = await supabase.from("escola_config").update({ limite: l, contar_justificados: j }).eq("escola_id", c.escola_id);
     if (error) { toast.error(erroAmigavel(error)); return; }
     toast.success("Regras salvas.");
     qc.invalidateQueries({ queryKey: ["config"] });
