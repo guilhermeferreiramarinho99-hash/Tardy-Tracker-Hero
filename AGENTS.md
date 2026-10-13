@@ -11,3 +11,4 @@
 
 - All writes to official records (atrasos, alertas, roles) go through SECURITY DEFINER RPCs that check roles and write auditoria; tables expose SELECT only via RLS — keeps permission logic in the database, not the UI.
 - Client data hooks live in src/lib/api.ts (react-query over the browser Supabase client); protected pages live under src/routes/_authenticated/.
+- Offline delay records are held only in IndexedDB (src/lib/fila.ts) and reach the official records through the registrar_atraso_offline RPC; the generated service worker registers only from src/lib/pwa.ts, never in dev or preview. Why: the browser's own storage is a temporary holding area, never the official record.
