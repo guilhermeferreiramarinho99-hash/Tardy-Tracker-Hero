@@ -40,7 +40,7 @@ function Auth() {
         const { error } = await supabase.auth.signInWithPassword({ email, password: senha });
         if (error) throw new Error("E-mail ou senha incorretos, ou e-mail ainda não confirmado.");
       } else if (modo === "criar") {
-        const { error } = await supabase.auth.signUp({ email, password: senha, options: { emailRedirectTo: window.location.origin + "/inicio", data: { nome } } });
+        const { error } = await supabase.auth.signUp({ email, password: senha, options: { emailRedirectTo: window.location.origin + "/auth", data: { nome } } });
         if (error) throw error;
         toast.success("Conta criada! Abra seu e-mail e clique no link de confirmação.");
         setModo("entrar");
@@ -86,7 +86,7 @@ function Auth() {
             {modo === "entrar" && <button type="button" onClick={() => setModo("criar")}>Criar uma conta</button>}
             {modo === "entrar" && <button type="button" onClick={() => setModo("esqueci")}>Esqueci minha senha</button>}
           </div>
-          <p className="pt-4 text-center text-xs text-muted-foreground">Novas contas só têm acesso depois de liberadas pela administração da escola.</p>
+          <p className="pt-4 text-center text-xs text-muted-foreground">Conta individual · acesso restrito à sua escola.</p>
         </form>
       </div>
     </div>

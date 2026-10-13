@@ -79,7 +79,7 @@ export async function enviarFila(userId: string): Promise<ResultadoEnvio> {
   if (estaSemInternet()) return { enviados: 0, problemas: 0, semInternet: true };
 
   const { data: sessao } = await supabase.auth.getSession();
-  if (!sessao.session) return { enviados: 0, problemas: 0, semInternet: false };
+  if (!sessao.session || sessao.session.user.id !== userId) return { enviados: 0, problemas: 0, semInternet: false };
 
   let enviados = 0;
   let problemas = 0;
