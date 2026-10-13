@@ -5,10 +5,11 @@ import { toast } from "sonner";
 import { Printer } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Box, PageHeader, SemPermissao } from "@/components/AppShell";
+import { pageHead } from "@/lib/page-head";
 import { erroAmigavel, fmtData, periodoAtualOuUltimo, useAlertas, useAlunos, useAtrasos, useConfig, useEncaminhamentos, useMe, usePeriodos, useTurmas } from "@/lib/api";
 
 export const Route = createFileRoute("/_authenticated/alertas")({
-  head: () => ({ meta: [{ title: "Painel da coordenação — Pontual+" }, { name: "description", content: "Alertas, totais e encaminhamentos." }] }),
+  head: () => pageHead("Painel da coordenação", "Alertas e encaminhamentos restritos à coordenação da sua escola no Pontual+."),
   component: Painel,
 });
 
