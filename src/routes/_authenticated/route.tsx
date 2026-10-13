@@ -1,6 +1,7 @@
 import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
 import { supabase } from "@/integrations/supabase/client";
 import { AppShell } from "@/components/AppShell";
+import { AvisoFilaOffline } from "@/components/FilaOffline";
 
 export const Route = createFileRoute("/_authenticated")({
   ssr: false,
@@ -10,6 +11,7 @@ export const Route = createFileRoute("/_authenticated")({
   },
   component: () => (
     <AppShell>
+      <AvisoFilaOffline />
       <Outlet />
     </AppShell>
   ),

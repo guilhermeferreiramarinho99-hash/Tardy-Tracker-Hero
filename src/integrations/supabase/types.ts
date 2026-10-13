@@ -363,6 +363,16 @@ export type Database = {
         Args: { _aluno: string; _justificado: boolean; _observacao?: string }
         Returns: Json
       }
+      registrar_atraso_offline: {
+        Args: {
+          _aluno: string
+          _data: string
+          _hora: string
+          _justificado: boolean
+          _observacao: string
+        }
+        Returns: Json
+      }
       vincular_aluno: {
         Args: { _aluno: string; _user: string }
         Returns: undefined

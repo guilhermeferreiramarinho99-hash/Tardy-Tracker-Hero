@@ -29,6 +29,20 @@
       "when": 1791929036610,
       "tag": "0003_rpc_excluir_aluno",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1791932146264,
+      "tag": "0004_registrar_atraso_offline",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1791932496740,
+      "tag": "0005_restrigir_leitura_cadastros",
+      "breakpoints": true
     }
   ]
 }

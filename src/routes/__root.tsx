@@ -81,6 +81,10 @@ function RootComponent() {
     });
     return () => data.subscription.unsubscribe();
   }, [router, queryClient]);
+  useEffect(() => {
+    // Ativa o modo sem internet apenas no app publicado (nunca no editor).
+    void import("@/lib/pwa").then((m) => m.registrarModoOffline());
+  }, []);
   return (
     <QueryClientProvider client={queryClient}>
       <Outlet />
