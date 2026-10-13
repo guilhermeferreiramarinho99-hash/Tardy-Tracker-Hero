@@ -63,7 +63,14 @@ export const usePeriodos = () =>
   useQuery({ queryKey: ["periodos"], queryFn: async () => unwrap(await supabase.from("periodos").select("*").order("inicio")) });
 
 export const useConfig = () =>
-  useQuery({ queryKey: ["config"], queryFn: async () => unwrap(await supabase.from("config").select("*").eq("id", 1).single()) });
+  useQuery({
+    queryKey: ["config"],
+    queryFn: async () => {
+      const r = await supabase.from("config").select("*").eq("id", 1).single();
+      if (r.error) throw r.error;
+      return r.data;
+    },
+  });
 
 export const useAtrasos = () =>
   useQuery({
