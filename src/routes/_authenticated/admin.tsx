@@ -4,7 +4,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { PageHeader, SemPermissao } from "@/components/AppShell";
-import { erroAmigavel, fmtData, papelNome, useAlunos, useConfig, useMe, usePeriodos, useTurmas, type Papel } from "@/lib/api";
+import { erroAmigavel, fmtData, hojeISO, papelNome, useAlunos, useConfig, useMe, usePeriodos, useTurmas, type Papel } from "@/lib/api";
 
 export const Route = createFileRoute("/_authenticated/admin")({
   head: () => ({ meta: [{ title: "Administração — Pontual+" }, { name: "robots", content: "noindex" }] }),
@@ -123,6 +123,28 @@ function AlunosAdmin() {
     qc.invalidateQueries({ queryKey: ["alunos"] });
   };
 
+  const exportar = () => {
+    const lista = alunos ?? [];
+    if (lista.length === 0) { toast.error("Nenhum aluno para exportar."); return; }
+    const esc = (v: string) => `"${String(v ?? "").replace(/"/g, '""')}"`;
+    const linhas = [
+      ["Nome", "Código interno", "Turma", "Situação"].map(esc).join(";"),
+      ...lista.map((a) =>
+        [a.nome, a.codigo, turmas?.find((t) => t.id === a.turma_id)?.nome ?? "", a.ativo ? "Ativo" : "Inativo"].map(esc).join(";")
+      ),
+    ];
+    const blob = new Blob(["\uFEFF" + linhas.join("\r\n")], { type: "text/csv;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const aEl = document.createElement("a");
+    aEl.href = url;
+    aEl.download = `alunos-pontual-mais-${hojeISO()}.csv`;
+    document.body.appendChild(aEl);
+    aEl.click();
+    aEl.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 30_000);
+    toast.success("Lista de alunos exportada.");
+  };
+
   return (
     <div className="space-y-5">
       <form onSubmit={salvarNovo} className="grid gap-2 sm:grid-cols-[2fr_1fr_1fr_auto]">
@@ -134,7 +156,10 @@ function AlunosAdmin() {
         </select>
         <button className="rounded-xl bg-primary px-4 py-3 font-bold text-primary-foreground">Cadastrar</button>
       </form>
-      <input placeholder="Pesquisar" value={busca} onChange={(e) => setBusca(e.target.value)} className={`${input} w-full`} />
+      <div className="flex flex-wrap items-center gap-2">
+        <input placeholder="Pesquisar" value={busca} onChange={(e) => setBusca(e.target.value)} className={`${input} min-w-48 flex-1`} />
+        <button onClick={exportar} className="rounded-xl border px-4 py-3 font-bold">Exportar CSV</button>
+      </div>
       <ul className="divide-y">
         {alunos?.filter((a) => a.nome.toLowerCase().includes(busca.toLowerCase())).map((a) => (
           <li key={a.id} className="flex flex-wrap items-center gap-2 py-3">
