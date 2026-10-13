@@ -14,16 +14,361 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      alertas: {
+        Row: {
+          aluno_id: string
+          gerado_em: string
+          id: string
+          periodo_id: string
+          quantidade: number
+          status: string
+        }
+        Insert: {
+          aluno_id: string
+          gerado_em?: string
+          id?: string
+          periodo_id: string
+          quantidade: number
+          status?: string
+        }
+        Update: {
+          aluno_id?: string
+          gerado_em?: string
+          id?: string
+          periodo_id?: string
+          quantidade?: number
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "alertas_aluno_id_fkey"
+            columns: ["aluno_id"]
+            isOneToOne: false
+            referencedRelation: "alunos"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "alertas_periodo_id_fkey"
+            columns: ["periodo_id"]
+            isOneToOne: false
+            referencedRelation: "periodos"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      alunos: {
+        Row: {
+          ativo: boolean
+          codigo: string
+          created_at: string
+          id: string
+          nome: string
+          turma_id: string
+          user_id: string | null
+        }
+        Insert: {
+          ativo?: boolean
+          codigo: string
+          created_at?: string
+          id?: string
+          nome: string
+          turma_id: string
+          user_id?: string | null
+        }
+        Update: {
+          ativo?: boolean
+          codigo?: string
+          created_at?: string
+          id?: string
+          nome?: string
+          turma_id?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "alunos_turma_id_fkey"
+            columns: ["turma_id"]
+            isOneToOne: false
+            referencedRelation: "turmas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      atrasos: {
+        Row: {
+          aluno_id: string
+          cancelado: boolean
+          created_at: string
+          data: string
+          hora: string
+          id: string
+          justificado: boolean
+          observacao: string | null
+          registrado_por: string | null
+          registrado_por_nome: string
+        }
+        Insert: {
+          aluno_id: string
+          cancelado?: boolean
+          created_at?: string
+          data: string
+          hora: string
+          id?: string
+          justificado?: boolean
+          observacao?: string | null
+          registrado_por?: string | null
+          registrado_por_nome?: string
+        }
+        Update: {
+          aluno_id?: string
+          cancelado?: boolean
+          created_at?: string
+          data?: string
+          hora?: string
+          id?: string
+          justificado?: boolean
+          observacao?: string | null
+          registrado_por?: string | null
+          registrado_por_nome?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "atrasos_aluno_id_fkey"
+            columns: ["aluno_id"]
+            isOneToOne: false
+            referencedRelation: "alunos"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      auditoria: {
+        Row: {
+          detalhes: Json | null
+          id: string
+          operacao: string
+          quando: string
+          usuario: string | null
+          usuario_nome: string
+        }
+        Insert: {
+          detalhes?: Json | null
+          id?: string
+          operacao: string
+          quando?: string
+          usuario?: string | null
+          usuario_nome?: string
+        }
+        Update: {
+          detalhes?: Json | null
+          id?: string
+          operacao?: string
+          quando?: string
+          usuario?: string | null
+          usuario_nome?: string
+        }
+        Relationships: []
+      }
+      config: {
+        Row: {
+          contar_justificados: boolean
+          fuso: string
+          id: number
+          limite: number
+        }
+        Insert: {
+          contar_justificados?: boolean
+          fuso?: string
+          id?: number
+          limite?: number
+        }
+        Update: {
+          contar_justificados?: boolean
+          fuso?: string
+          id?: number
+          limite?: number
+        }
+        Relationships: []
+      }
+      encaminhamentos: {
+        Row: {
+          alerta_id: string | null
+          aluno_id: string
+          autor: string | null
+          autor_nome: string
+          created_at: string
+          id: string
+          texto: string
+        }
+        Insert: {
+          alerta_id?: string | null
+          aluno_id: string
+          autor?: string | null
+          autor_nome?: string
+          created_at?: string
+          id?: string
+          texto: string
+        }
+        Update: {
+          alerta_id?: string | null
+          aluno_id?: string
+          autor?: string | null
+          autor_nome?: string
+          created_at?: string
+          id?: string
+          texto?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "encaminhamentos_alerta_id_fkey"
+            columns: ["alerta_id"]
+            isOneToOne: false
+            referencedRelation: "alertas"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "encaminhamentos_aluno_id_fkey"
+            columns: ["aluno_id"]
+            isOneToOne: false
+            referencedRelation: "alunos"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      periodos: {
+        Row: {
+          fim: string
+          id: string
+          inicio: string
+          nome: string
+        }
+        Insert: {
+          fim: string
+          id?: string
+          inicio: string
+          nome: string
+        }
+        Update: {
+          fim?: string
+          id?: string
+          inicio?: string
+          nome?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          created_at: string
+          email: string | null
+          id: string
+          nome: string
+        }
+        Insert: {
+          created_at?: string
+          email?: string | null
+          id: string
+          nome?: string
+        }
+        Update: {
+          created_at?: string
+          email?: string | null
+          id?: string
+          nome?: string
+        }
+        Relationships: []
+      }
+      turmas: {
+        Row: {
+          ano: string
+          id: string
+          nome: string
+          ordem: number
+        }
+        Insert: {
+          ano: string
+          id?: string
+          nome: string
+          ordem?: number
+        }
+        Update: {
+          ano?: string
+          id?: string
+          nome?: string
+          ordem?: number
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      analisar_alerta: {
+        Args: { _id: string; _texto: string }
+        Returns: undefined
+      }
+      auditar: {
+        Args: { _detalhes: Json; _operacao: string }
+        Returns: undefined
+      }
+      cancelar_atraso: {
+        Args: { _id: string; _motivo: string }
+        Returns: undefined
+      }
+      corrigir_atraso: {
+        Args: { _id: string; _justificado: boolean; _motivo: string }
+        Returns: undefined
+      }
+      definir_papel: {
+        Args: {
+          _ativo: boolean
+          _role: Database["public"]["Enums"]["app_role"]
+          _user: string
+        }
+        Returns: undefined
+      }
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
+      is_gestor: { Args: { _user_id: string }; Returns: boolean }
+      is_staff: { Args: { _user_id: string }; Returns: boolean }
+      nome_usuario: { Args: { _uid: string }; Returns: string }
+      recalcular_alerta: {
+        Args: { _aluno: string; _data: string }
+        Returns: Json
+      }
+      registrar_atraso: {
+        Args: { _aluno: string; _justificado: boolean; _observacao?: string }
+        Returns: Json
+      }
+      vincular_aluno: {
+        Args: { _aluno: string; _user: string }
+        Returns: undefined
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "equipe" | "coordenacao" | "aluno"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +495,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "equipe", "coordenacao", "aluno"],
+    },
   },
 } as const
