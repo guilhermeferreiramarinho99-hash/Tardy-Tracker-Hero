@@ -115,6 +115,13 @@ function AlunosAdmin() {
     toast.success("Cadastro atualizado.");
     qc.invalidateQueries({ queryKey: ["alunos"] });
   };
+  const excluir = async (id: string, nomeAluno: string) => {
+    if (!window.confirm(`Excluir definitivamente ${nomeAluno}? Isso só é possível se ele não tiver nenhum atraso registrado.`)) return;
+    const { error } = await supabase.rpc("excluir_aluno", { _id: id });
+    if (error) { toast.error(erroAmigavel(error)); return; }
+    toast.success("Aluno excluído.");
+    qc.invalidateQueries({ queryKey: ["alunos"] });
+  };
 
   return (
     <div className="space-y-5">
