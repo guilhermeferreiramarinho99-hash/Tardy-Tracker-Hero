@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 import { toast } from "sonner";
 import { AlertTriangle, CheckCircle2, Search } from "lucide-react";
 import { PageHeader } from "@/components/AppShell";
@@ -107,7 +107,7 @@ function Registrar() {
   );
 }
 
-function Step({ n, title, children }: { n: number; title: string; children: React.ReactNode }) {
+function Step({ n, title, children }: { n: number; title: string; children: ReactNode }) {
   return (
     <section className="rounded-2xl border bg-card p-5 shadow-sm">
       <h2 className="mb-3 flex items-center gap-3 font-bold text-lg">
