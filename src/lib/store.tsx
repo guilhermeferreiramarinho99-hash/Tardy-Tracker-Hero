@@ -28,7 +28,7 @@ export function periodoDe(periodos: Periodo[], data: string) {
   return periodos.find((p) => data >= p.inicio && data <= p.fim);
 }
 
-type Result = { ok: true; alerta?: Alerta } | { ok: false; erro: string };
+type Result = { ok: true; alerta?: Alerta | undefined } | { ok: false; erro: string };
 
 type Ctx = State & {
   registrar: (a: Omit<Atraso, "id" | "registradoPor">) => Result;

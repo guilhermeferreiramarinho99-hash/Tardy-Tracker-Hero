@@ -7,9 +7,9 @@ export type Atraso = {
   data: string; // yyyy-mm-dd
   hora: string; // HH:mm
   justificado: boolean;
-  observacao?: string;
+  observacao?: string | undefined;
   registradoPor: string;
-  cancelado?: boolean;
+  cancelado?: boolean | undefined;
 };
 export type Periodo = { id: string; nome: string; inicio: string; fim: string };
 export type Alerta = {
@@ -19,7 +19,7 @@ export type Alerta = {
   quantidade: number;
   geradoEm: string;
   status: "pendente" | "analisado";
-  encaminhamento?: string;
+  encaminhamento?: string | undefined;
 };
 export type Auditoria = { id: string; quando: string; usuario: string; operacao: string };
 export type Config = { limite: number; contarJustificados: boolean };
@@ -42,7 +42,7 @@ export const alunosSeed: Aluno[] = nomes.map((nome, i) => ({
   id: `a${i + 1}`,
   codigo: `P+${String(2027000 + i + 1)}`,
   nome,
-  turmaId: turmasSeed[i % turmasSeed.length].id,
+  turmaId: turmasSeed[i % turmasSeed.length]!.id,
   ativo: true,
 }));
 

@@ -19,7 +19,7 @@ export const Route = createFileRoute("/alertas")({
 
 function Painel() {
   const { alertas, alunos, turmas, periodos, atrasos, config, analisarAlerta, auditoria } = useStore();
-  const [pid, setPid] = useState(periodoDe(periodos, hojeISO())?.id ?? periodos[0].id);
+  const [pid, setPid] = useState(periodoDe(periodos, hojeISO())?.id ?? periodos[0]!.id);
   const [turmaId, setTurmaId] = useState("");
   const p = periodos.find((x) => x.id === pid)!;
   const turmaDe = (aid: string) => alunos.find((a) => a.id === aid)?.turmaId;

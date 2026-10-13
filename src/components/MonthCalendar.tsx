@@ -4,8 +4,8 @@ const meses = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "O
 
 export function PeriodCalendar({ periodo, atrasos }: { periodo: Periodo; atrasos: Atraso[] }) {
   const mapa = new Map(atrasos.map((a) => [a.data, a.justificado]));
-  const [y1, m1] = periodo.inicio.split("-").map(Number);
-  const [y2, m2] = periodo.fim.split("-").map(Number);
+  const [y1 = 0, m1 = 1] = periodo.inicio.split("-").map(Number);
+  const [y2 = 0, m2 = 1] = periodo.fim.split("-").map(Number);
   const months: [number, number][] = [];
   for (let y = y1, m = m1; y < y2 || (y === y2 && m <= m2); m === 12 ? (y++, (m = 1)) : m++) months.push([y, m]);
 

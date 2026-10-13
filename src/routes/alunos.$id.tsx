@@ -23,7 +23,7 @@ function Historico() {
   const { id } = Route.useParams();
   const { alunos, turmas, periodos, atrasosNoPeriodo, corrigir, cancelar } = useStore();
   const aluno = alunos.find((a) => a.id === id);
-  const [pid, setPid] = useState(periodoDe(periodos, hojeISO())?.id ?? periodos[0].id);
+  const [pid, setPid] = useState(periodoDe(periodos, hojeISO())?.id ?? periodos[0]!.id);
   if (!aluno) return <div className="p-8">Aluno não encontrado. <Link to="/alunos" className="text-primary underline">Voltar</Link></div>;
   const periodo = periodos.find((p) => p.id === pid)!;
   const regs = atrasosNoPeriodo(aluno.id, pid);
@@ -31,7 +31,7 @@ function Historico() {
 
   const acao = (rid: string, tipo: "corrigir" | "cancelar", atual: boolean) => {
     const motivo = window.prompt(tipo === "corrigir" ? "Motivo da correção (obrigatório):" : "Motivo do cancelamento (obrigatório):");
-    if (!motivo?.trim()) return toast.error("É preciso informar um motivo.");
+    if (!motivo?.trim()) { toast.error("É preciso informar um motivo."); return; }
     if (tipo === "corrigir") corrigir(rid, !atual, motivo.trim()); else cancelar(rid, motivo.trim());
     toast.success("Alteração salva e registrada no histórico de alterações.");
   };

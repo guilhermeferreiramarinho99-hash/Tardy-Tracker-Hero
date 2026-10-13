@@ -35,7 +35,7 @@ function Registrar() {
   const confirmar = () => {
     if (!aluno || just === null) return;
     const r = registrar({ alunoId, data: hojeISO(), hora: agoraHora(), justificado: just, observacao: obs.trim() || undefined });
-    if (!r.ok) return toast.error(r.erro);
+    if (!r.ok) { toast.error(r.erro); return; }
     toast.success(`Atraso de ${aluno.nome} registrado.`);
     if (r.alerta) setAlerta(r.alerta);
     setAlunoId(""); setJust(null); setObs(""); setBusca("");
