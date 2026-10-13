@@ -22,6 +22,13 @@
       "when": 1791927041573,
       "tag": "0002_revogar_funcoes_anonimas",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1791929036610,
+      "tag": "0003_rpc_excluir_aluno",
+      "breakpoints": true
     }
   ]
 }
