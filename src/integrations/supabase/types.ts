@@ -344,6 +344,7 @@ export type Database = {
         }
         Returns: undefined
       }
+      excluir_aluno: { Args: { _id: string }; Returns: undefined }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
