@@ -1,8 +1,8 @@
-import type { Atraso, Periodo } from "@/lib/data";
+import type { Periodo } from "@/lib/api";
 
 const meses = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"];
 
-export function PeriodCalendar({ periodo, atrasos }: { periodo: Periodo; atrasos: Atraso[] }) {
+export function PeriodCalendar({ periodo, atrasos }: { periodo: Periodo; atrasos: { data: string; justificado: boolean }[] }) {
   const mapa = new Map(atrasos.map((a) => [a.data, a.justificado]));
   const [y1 = 0, m1 = 1] = periodo.inicio.split("-").map(Number);
   const [y2 = 0, m2 = 1] = periodo.fim.split("-").map(Number);
@@ -16,7 +16,7 @@ export function PeriodCalendar({ periodo, atrasos }: { periodo: Periodo; atrasos
         const dias = new Date(y, m, 0).getDate();
         return (
           <div key={`${y}-${m}`} className="rounded-xl border bg-card p-3">
-            <div className="font-bold mb-2">{meses[m - 1]} {y}</div>
+            <div className="mb-2 font-bold">{meses[m - 1]} {y}</div>
             <div className="grid grid-cols-7 gap-1 text-center text-xs">
               {["D", "S", "T", "Q", "Q", "S", "S"].map((d, i) => <div key={i} className="text-muted-foreground">{d}</div>)}
               {Array.from({ length: first }).map((_, i) => <div key={`e${i}`} />)}
