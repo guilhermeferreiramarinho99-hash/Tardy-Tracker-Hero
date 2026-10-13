@@ -144,6 +144,7 @@ function AlunosAdmin() {
               {turmas?.map((t) => <option key={t.id} value={t.id}>{t.nome}</option>)}
             </select>
             <button onClick={() => atualizar(a.id, { ativo: !a.ativo })} className={`rounded-lg px-3 py-2 text-sm font-bold ${a.ativo ? "bg-ok-soft text-ok" : "bg-muted text-muted-foreground"}`}>{a.ativo ? "Ativo" : "Inativo"}</button>
+            <button onClick={() => excluir(a.id, a.nome)} className="rounded-lg bg-late-soft px-3 py-2 text-sm font-bold text-late">Excluir</button>
           </li>
         ))}
       </ul>
