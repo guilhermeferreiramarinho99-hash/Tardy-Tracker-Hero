@@ -17,7 +17,7 @@ export type Database = {
       alertas: {
         Row: {
           aluno_id: string
-          escola_id: string | null
+          escola_id: string
           gerado_em: string
           id: string
           periodo_id: string
@@ -26,7 +26,7 @@ export type Database = {
         }
         Insert: {
           aluno_id: string
-          escola_id?: string | null
+          escola_id?: string
           gerado_em?: string
           id?: string
           periodo_id: string
@@ -35,7 +35,7 @@ export type Database = {
         }
         Update: {
           aluno_id?: string
-          escola_id?: string | null
+          escola_id?: string
           gerado_em?: string
           id?: string
           periodo_id?: string
@@ -71,7 +71,7 @@ export type Database = {
           ativo: boolean
           codigo: string
           created_at: string
-          escola_id: string | null
+          escola_id: string
           id: string
           nome: string
           turma_id: string
@@ -81,7 +81,7 @@ export type Database = {
           ativo?: boolean
           codigo: string
           created_at?: string
-          escola_id?: string | null
+          escola_id?: string
           id?: string
           nome: string
           turma_id: string
@@ -91,7 +91,7 @@ export type Database = {
           ativo?: boolean
           codigo?: string
           created_at?: string
-          escola_id?: string | null
+          escola_id?: string
           id?: string
           nome?: string
           turma_id?: string
@@ -120,7 +120,7 @@ export type Database = {
           cancelado: boolean
           created_at: string
           data: string
-          escola_id: string | null
+          escola_id: string
           hora: string
           id: string
           justificado: boolean
@@ -133,7 +133,7 @@ export type Database = {
           cancelado?: boolean
           created_at?: string
           data: string
-          escola_id?: string | null
+          escola_id?: string
           hora: string
           id?: string
           justificado?: boolean
@@ -146,7 +146,7 @@ export type Database = {
           cancelado?: boolean
           created_at?: string
           data?: string
-          escola_id?: string | null
+          escola_id?: string
           hora?: string
           id?: string
           justificado?: boolean
@@ -174,7 +174,7 @@ export type Database = {
       auditoria: {
         Row: {
           detalhes: Json | null
-          escola_id: string | null
+          escola_id: string
           id: string
           operacao: string
           quando: string
@@ -183,7 +183,7 @@ export type Database = {
         }
         Insert: {
           detalhes?: Json | null
-          escola_id?: string | null
+          escola_id?: string
           id?: string
           operacao: string
           quando?: string
@@ -192,7 +192,7 @@ export type Database = {
         }
         Update: {
           detalhes?: Json | null
-          escola_id?: string | null
+          escola_id?: string
           id?: string
           operacao?: string
           quando?: string
@@ -237,7 +237,7 @@ export type Database = {
           autor: string | null
           autor_nome: string
           created_at: string
-          escola_id: string | null
+          escola_id: string
           id: string
           texto: string
         }
@@ -247,7 +247,7 @@ export type Database = {
           autor?: string | null
           autor_nome?: string
           created_at?: string
-          escola_id?: string | null
+          escola_id?: string
           id?: string
           texto: string
         }
@@ -257,7 +257,7 @@ export type Database = {
           autor?: string | null
           autor_nome?: string
           created_at?: string
-          escola_id?: string | null
+          escola_id?: string
           id?: string
           texto?: string
         }
@@ -390,21 +390,21 @@ export type Database = {
       }
       periodos: {
         Row: {
-          escola_id: string | null
+          escola_id: string
           fim: string
           id: string
           inicio: string
           nome: string
         }
         Insert: {
-          escola_id?: string | null
+          escola_id?: string
           fim: string
           id?: string
           inicio: string
           nome: string
         }
         Update: {
-          escola_id?: string | null
+          escola_id?: string
           fim?: string
           id?: string
           inicio?: string
@@ -444,21 +444,21 @@ export type Database = {
       turmas: {
         Row: {
           ano: string
-          escola_id: string | null
+          escola_id: string
           id: string
           nome: string
           ordem: number
         }
         Insert: {
           ano: string
-          escola_id?: string | null
+          escola_id?: string
           id?: string
           nome: string
           ordem?: number
         }
         Update: {
           ano?: string
-          escola_id?: string | null
+          escola_id?: string
           id?: string
           nome?: string
           ordem?: number
@@ -475,19 +475,19 @@ export type Database = {
       }
       user_roles: {
         Row: {
-          escola_id: string | null
+          escola_id: string
           id: string
           role: Database["public"]["Enums"]["app_role"]
           user_id: string
         }
         Insert: {
-          escola_id?: string | null
+          escola_id?: string
           id?: string
           role: Database["public"]["Enums"]["app_role"]
           user_id: string
         }
         Update: {
-          escola_id?: string | null
+          escola_id?: string
           id?: string
           role?: Database["public"]["Enums"]["app_role"]
           user_id?: string

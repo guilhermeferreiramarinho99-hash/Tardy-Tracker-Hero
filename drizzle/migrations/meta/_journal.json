@@ -50,6 +50,13 @@
       "when": 1791933996906,
       "tag": "0006_escolas_independentes",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1792008251534,
+      "tag": "0007_reforcar_isolamento_por_escola",
+      "breakpoints": true
     }
   ]
 }
