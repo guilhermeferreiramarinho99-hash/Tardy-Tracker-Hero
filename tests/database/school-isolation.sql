@@ -114,7 +114,7 @@ BEGIN
   PERFORM pg_temp.expect_error(format('SELECT public.registrar_atraso_offline(%L,false,NULL,current_date-1,''07:10'')',foreign_student),'P0001','Aluno não encontrado ou inativo');
   PERFORM pg_temp.expect_error(format('SELECT public.corrigir_atraso(%L,true,''Tentativa fictícia'')',foreign_occurrence),'P0001','Registro não encontrado');
   PERFORM pg_temp.expect_error(format('SELECT public.cancelar_atraso(%L,''Tentativa fictícia'')',foreign_occurrence),'P0001','Registro não encontrado');
-  PERFORM pg_temp.expect_error(format('UPDATE public.alunos SET escola_id=%L WHERE id=%L',target,student),'P0001','A escola do registro não pode ser alterada');
+  PERFORM pg_temp.expect_error(format('UPDATE public.alunos SET escola_id=%L WHERE id=%L',target,student),'P0001','Sem permissão para acessar dados de outra escola');
   PERFORM pg_temp.expect_error(format('UPDATE public.alunos SET turma_id=%L WHERE id=%L',('30000000-0000-4000-8000-'||lpad(other::text,12,'0'))::uuid,student),'P0001','Turma não pertence à escola');
   PERFORM pg_temp.expect_error(format('INSERT INTO public.alunos(escola_id,turma_id,codigo,nome) VALUES(%L,%L,''INVASÃO'',''Aluno invasor fictício'')',target,('30000000-0000-4000-8000-'||lpad(other::text,12,'0'))::uuid),'P0001','Sem permissão para acessar dados de outra escola');
   PERFORM pg_temp.expect_error(format('UPDATE public.escola_config SET escola_id=%L WHERE escola_id=%L',target,s),'42501','new row violates row-level security policy%');
