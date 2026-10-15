@@ -9,7 +9,7 @@ if [ "$(id -u)" = 0 ]; then
   local_user="$(awk -F: '$3 > 0 {print $1; exit}' /etc/passwd)"
   if [ -z "$local_user" ]; then echo 'A non-root local account is required' >&2; exit 1; fi
   chown "$local_user" "$work"
-  runner=(runuser -u "$local_user" --)
+  runner=(setpriv --reuid="$(id -u "$local_user")" --regid="$(id -g "$local_user")" --clear-groups --)
 fi
 cleanup() {
   "${runner[@]}" pg_ctl -D "$work/data" -m immediate stop > /dev/null 2>&1 || true
