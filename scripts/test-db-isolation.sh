@@ -19,7 +19,7 @@ trap cleanup EXIT
 for binary in initdb pg_ctl psql; do
   command -v "$binary" > /dev/null || { echo "Required local PostgreSQL binary missing: $binary" >&2; exit 1; }
 done
-"${runner[@]}" initdb -D "$work/data" -U postgres --auth=trust > "$work/init.log" 2>&1
+"${runner[@]}" initdb -D "$work/data" -U postgres --auth=trust > "$work/init.log" 2>&1 || { cat "$work/init.log" >&2; exit 1; }
 "${runner[@]}" pg_ctl -D "$work/data" -l "$work/server.log" \
   -o "-k $work -p 55439 -c listen_addresses=''" -w start > /dev/null
 export PGHOST="$work" PGPORT=55439 PGUSER=postgres PGDATABASE=postgres
