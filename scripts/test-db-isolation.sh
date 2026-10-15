@@ -6,8 +6,10 @@ root="$(cd "$(dirname "$0")/.." && pwd)"
 work="$(mktemp -d /tmp/pontual-db-test.XXXXXX)"
 runner=()
 if [ "$(id -u)" = 0 ]; then
-  chown nobody "$work"
-  runner=(runuser -u nobody --)
+  local_user="$(awk -F: '$3 > 0 {print $1; exit}' /etc/passwd)"
+  if [ -z "$local_user" ]; then echo 'A non-root local account is required' >&2; exit 1; fi
+  chown "$local_user" "$work"
+  runner=(runuser -u "$local_user" --)
 fi
 cleanup() {
   "${runner[@]}" pg_ctl -D "$work/data" -m immediate stop > /dev/null 2>&1 || true
