@@ -30,8 +30,9 @@ CREATE ROLE service_role NOLOGIN BYPASSRLS;
 CREATE SCHEMA auth;
 CREATE TABLE auth.users (id uuid PRIMARY KEY, email text, raw_user_meta_data jsonb DEFAULT '{}');
 CREATE FUNCTION auth.uid() RETURNS uuid LANGUAGE sql STABLE AS $$
-  SELECT nullif(current_setting('request.jwt.claims', true), '')::jsonb->>'sub'
+  SELECT (nullif(current_setting('request.jwt.claims', true), '')::jsonb->>'sub')::uuid
 $$;
+GRANT USAGE ON SCHEMA auth TO anon, authenticated, service_role;
 SQL
 for migration in "$root"/drizzle/migrations/[0-9][0-9][0-9][0-9]_*.sql; do
   psql -X -v ON_ERROR_STOP=1 -q -f "$migration" > "$work/migration.log" 2>&1 || { cat "$work/migration.log"; exit 1; }
