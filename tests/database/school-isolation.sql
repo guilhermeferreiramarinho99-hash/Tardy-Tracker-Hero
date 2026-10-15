@@ -40,17 +40,25 @@ SELECT user_id, escola_id, CASE right(user_id::text,1)
 FROM public.escola_membros WHERE user_id::text LIKE '10000000-%' AND right(user_id::text,1)<>'6';
 INSERT INTO public.escola_config(escola_id,limite)
 SELECT id,3 FROM public.escolas WHERE id::text LIKE '20000000-%';
-INSERT INTO public.turmas(id,escola_id,ano,nome) VALUES
- ('30000000-0000-4000-8000-000000000001','20000000-0000-4000-8000-000000000001','6º ano','Turma fictícia'),
- ('30000000-0000-4000-8000-000000000002','20000000-0000-4000-8000-000000000002','6º ano','Turma fictícia');
-INSERT INTO public.alunos(id,escola_id,turma_id,codigo,nome,user_id) VALUES
- ('40000000-0000-4000-8000-000000000001','20000000-0000-4000-8000-000000000001','30000000-0000-4000-8000-000000000001','FICT-1','Aluno Fictício','10000000-0000-4000-8000-000000000005'),
- ('40000000-0000-4000-8000-000000000002','20000000-0000-4000-8000-000000000002','30000000-0000-4000-8000-000000000002','FICT-1','Aluno Fictício',NULL);
--- Synthetic period covers only the test date; not a proposed school calendar.
-INSERT INTO public.periodos(escola_id,nome,inicio,fim)
-SELECT id,'Período fictício', (now() AT TIME ZONE 'America/Campo_Grande')::date-5,
- (now() AT TIME ZONE 'America/Campo_Grande')::date+1
-FROM public.escolas WHERE id::text LIKE '20000000-%';
+DO $$ DECLARE n int; suffix text; s uuid; t uuid; BEGIN
+ FOR n IN 1..2 LOOP
+  suffix := lpad(n::text,12,'0');
+  s := ('20000000-0000-4000-8000-'||suffix)::uuid;
+  t := ('30000000-0000-4000-8000-'||suffix)::uuid;
+  PERFORM set_config('request.jwt.claims',jsonb_build_object('sub','10000000-0000-4000-8000-'||suffix,'role','authenticated')::text,true);
+  SET LOCAL ROLE authenticated;
+  INSERT INTO public.turmas(id,escola_id,ano,nome) VALUES(t,s,'6º ano','Turma fictícia');
+  INSERT INTO public.alunos(id,escola_id,turma_id,codigo,nome,user_id)
+  VALUES(('40000000-0000-4000-8000-'||suffix)::uuid,s,t,'FICT-1','Aluno Fictício',
+   CASE WHEN n=1 THEN '10000000-0000-4000-8000-000000000005'::uuid ELSE NULL END);
+  -- Synthetic period covers only the test date; not a school calendar proposal.
+  INSERT INTO public.periodos(escola_id,nome,inicio,fim)
+  VALUES(s,'Período fictício',(now() AT TIME ZONE 'America/Campo_Grande')::date-5,
+   (now() AT TIME ZONE 'America/Campo_Grande')::date+1);
+  RESET ROLE;
+ END LOOP;
+ PERFORM set_config('request.jwt.claims','',true);
+END $$;
 INSERT INTO public.atrasos(id,escola_id,aluno_id,data,hora) VALUES
  ('50000000-0000-4000-8000-000000000001','20000000-0000-4000-8000-000000000001','40000000-0000-4000-8000-000000000001',(now() AT TIME ZONE 'America/Campo_Grande')::date-2,'07:10'),
  ('50000000-0000-4000-8000-000000000002','20000000-0000-4000-8000-000000000002','40000000-0000-4000-8000-000000000002',(now() AT TIME ZONE 'America/Campo_Grande')::date-2,'07:10');
