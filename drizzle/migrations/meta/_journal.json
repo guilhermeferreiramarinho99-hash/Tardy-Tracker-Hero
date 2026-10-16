@@ -71,6 +71,13 @@
       "when": 1792144591026,
       "tag": "0009_cadastro_escola_campos",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1792144609822,
+      "tag": "0010_convites_e_verificacao",
+      "breakpoints": true
     }
   ]
 }

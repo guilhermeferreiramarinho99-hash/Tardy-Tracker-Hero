@@ -230,6 +230,50 @@ export type Database = {
         }
         Relationships: []
       }
+      convites: {
+        Row: {
+          codigo: string
+          criado_em: string
+          criado_por: string | null
+          escola_id: string
+          expira_em: string
+          id: string
+          papel: Database["public"]["Enums"]["app_role"]
+          usado_em: string | null
+          usado_por: string | null
+        }
+        Insert: {
+          codigo: string
+          criado_em?: string
+          criado_por?: string | null
+          escola_id: string
+          expira_em?: string
+          id?: string
+          papel: Database["public"]["Enums"]["app_role"]
+          usado_em?: string | null
+          usado_por?: string | null
+        }
+        Update: {
+          codigo?: string
+          criado_em?: string
+          criado_por?: string | null
+          escola_id?: string
+          expira_em?: string
+          id?: string
+          papel?: Database["public"]["Enums"]["app_role"]
+          usado_em?: string | null
+          usado_por?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "convites_escola_id_fkey"
+            columns: ["escola_id"]
+            isOneToOne: false
+            referencedRelation: "escolas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       encaminhamentos: {
         Row: {
           alerta_id: string | null
@@ -538,6 +582,17 @@ export type Database = {
         Args: { _id: string; _texto: string }
         Returns: undefined
       }
+      atualizar_dados_escola: {
+        Args: {
+          _cep: string
+          _cidade: string
+          _email_institucional: string
+          _endereco: string
+          _estado: string
+          _telefone: string
+        }
+        Returns: undefined
+      }
       atualizar_escola: {
         Args: { _nome: string; _renovar_codigo?: boolean }
         Returns: undefined
@@ -545,6 +600,19 @@ export type Database = {
       auditar: {
         Args: { _detalhes: Json; _operacao: string }
         Returns: undefined
+      }
+      buscar_email_por_usuario: { Args: { _usuario: string }; Returns: string }
+      cadastrar_escola_completa: {
+        Args: {
+          _cep: string
+          _cidade: string
+          _email_institucional: string
+          _endereco: string
+          _estado: string
+          _nome: string
+          _telefone: string
+        }
+        Returns: string
       }
       cancelar_atraso: {
         Args: { _id: string; _motivo: string }
@@ -563,8 +631,17 @@ export type Database = {
         }
         Returns: undefined
       }
+      definir_usuario: {
+        Args: { _user: string; _usuario: string }
+        Returns: undefined
+      }
+      eh_superadmin: { Args: { _user?: string }; Returns: boolean }
       entrar_escola: { Args: { _codigo: string }; Returns: undefined }
       excluir_aluno: { Args: { _id: string }; Returns: undefined }
+      gerar_convite: {
+        Args: { _papel: Database["public"]["Enums"]["app_role"] }
+        Returns: string
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
@@ -574,8 +651,25 @@ export type Database = {
       }
       is_gestor: { Args: { _user_id: string }; Returns: boolean }
       is_staff: { Args: { _user_id: string }; Returns: boolean }
+      listar_escolas_pendentes: {
+        Args: never
+        Returns: {
+          cep: string
+          cidade: string
+          criado_em: string
+          email_institucional: string
+          endereco: string
+          escola_id: string
+          estado: string
+          nome: string
+          responsavel: string
+          responsavel_email: string
+          telefone: string
+        }[]
+      }
       minha_escola: { Args: never; Returns: string }
       nome_usuario: { Args: { _uid: string }; Returns: string }
+      normalizar_nome: { Args: { _t: string }; Returns: string }
       recalcular_alerta: {
         Args: { _aluno: string; _data: string }
         Returns: Json
@@ -593,6 +687,12 @@ export type Database = {
           _observacao: string
         }
         Returns: Json
+      }
+      resgatar_convite: { Args: { _codigo: string }; Returns: string }
+      revogar_convite: { Args: { _id: string }; Returns: undefined }
+      verificar_escola: {
+        Args: { _aprovar: boolean; _escola: string }
+        Returns: undefined
       }
       vincular_aluno: {
         Args: { _aluno: string; _user: string }
