@@ -64,6 +64,13 @@
       "when": 1792038256086,
       "tag": "0008_persistir_permissoes_helpers_rls",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1792144591026,
+      "tag": "0009_cadastro_escola_campos",
+      "breakpoints": true
     }
   ]
 }

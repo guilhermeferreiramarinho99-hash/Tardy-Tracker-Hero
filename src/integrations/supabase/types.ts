@@ -372,19 +372,43 @@ export type Database = {
       }
       escolas: {
         Row: {
+          admin_pendente: string | null
+          cep: string | null
+          cidade: string | null
           created_at: string
+          email_institucional: string | null
+          endereco: string | null
+          estado: string | null
           id: string
           nome: string
+          status: string
+          telefone: string | null
         }
         Insert: {
+          admin_pendente?: string | null
+          cep?: string | null
+          cidade?: string | null
           created_at?: string
+          email_institucional?: string | null
+          endereco?: string | null
+          estado?: string | null
           id?: string
           nome: string
+          status?: string
+          telefone?: string | null
         }
         Update: {
+          admin_pendente?: string | null
+          cep?: string | null
+          cidade?: string | null
           created_at?: string
+          email_institucional?: string | null
+          endereco?: string | null
+          estado?: string | null
           id?: string
           nome?: string
+          status?: string
+          telefone?: string | null
         }
         Relationships: []
       }
@@ -426,18 +450,21 @@ export type Database = {
           email: string | null
           id: string
           nome: string
+          usuario: string | null
         }
         Insert: {
           created_at?: string
           email?: string | null
           id: string
           nome?: string
+          usuario?: string | null
         }
         Update: {
           created_at?: string
           email?: string | null
           id?: string
           nome?: string
+          usuario?: string | null
         }
         Relationships: []
       }
@@ -573,7 +600,7 @@ export type Database = {
       }
     }
     Enums: {
-      app_role: "admin" | "equipe" | "coordenacao" | "aluno"
+      app_role: "admin" | "equipe" | "coordenacao" | "aluno" | "superadmin"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -701,7 +728,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
-      app_role: ["admin", "equipe", "coordenacao", "aluno"],
+      app_role: ["admin", "equipe", "coordenacao", "aluno", "superadmin"],
     },
   },
 } as const
