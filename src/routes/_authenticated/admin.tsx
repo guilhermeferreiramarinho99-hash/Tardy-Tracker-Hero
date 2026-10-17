@@ -107,6 +107,61 @@ function Usuarios({ meuId }: { meuId: string | undefined }) {
   );
 }
 
+function Convites() {
+  const qc = useQueryClient();
+  const [papel, setPapel] = useState<"equipe" | "coordenacao" | "aluno">("equipe");
+  const [novo, setNovo] = useState<string>();
+  const { data } = useQuery({ queryKey: ["convites"], queryFn: async () => {
+    const r = await supabase.from("convites").select("*").order("criado_em", { ascending: false }).limit(30);
+    if (r.error) throw r.error;
+    return r.data;
+  } });
+  const gerar = async () => {
+    const { data: c, error } = await supabase.rpc("gerar_convite", { _papel: papel });
+    if (error) { toast.error(erroAmigavel(error)); return; }
+    setNovo(c as string);
+    qc.invalidateQueries({ queryKey: ["convites"] });
+  };
+  const revogar = async (id: string) => {
+    if (!window.confirm("Revogar este convite?")) return;
+    const { error } = await supabase.rpc("revogar_convite", { _id: id });
+    if (error) { toast.error(erroAmigavel(error)); return; }
+    qc.invalidateQueries({ queryKey: ["convites"] });
+  };
+  const situacao = (c: { usado_em: string | null; expira_em: string }) =>
+    c.usado_em ? "Usado" : new Date(c.expira_em) < new Date() ? "Expirado ou revogado" : "Disponível";
+  return (
+    <div className="space-y-3">
+      <h2 className="font-bold">Convidar funcionário ou aluno</h2>
+      <p className="text-sm text-muted-foreground">Cada convite vale para uma única pessoa, por 7 dias, com o perfil escolhido.</p>
+      <div className="flex flex-wrap gap-2">
+        <select aria-label="Perfil do convite" value={papel} onChange={(e) => setPapel(e.target.value as typeof papel)} className={input}>
+          <option value="equipe">Equipe escolar</option>
+          <option value="coordenacao">Coordenação</option>
+          <option value="aluno">Aluno</option>
+        </select>
+        <button onClick={gerar} className="rounded-xl bg-primary px-4 py-3 font-bold text-primary-foreground">Gerar convite</button>
+      </div>
+      {novo && (
+        <div className="rounded-xl bg-ok-soft p-3 text-sm">
+          <p className="font-bold">Convite criado. Envie à pessoa:</p>
+          <p className="break-all font-mono text-base">{novo}</p>
+          <p className="mt-1">Ela deve abrir a página de convite do Pontual+ e digitar o código.</p>
+          <button className="mt-2 font-bold text-primary" onClick={() => navigator.clipboard.writeText(`${window.location.origin}/convite?codigo=${novo}`).then(() => toast.success("Link copiado."))}>Copiar link do convite</button>
+        </div>
+      )}
+      <ul className="divide-y text-sm">
+        {data?.map((c) => (
+          <li key={c.id} className="flex items-center justify-between gap-2 py-2">
+            <span>{papelNome[c.papel as Papel] ?? c.papel} · <span className="font-mono">{c.codigo.slice(0, 6)}…</span> · {situacao(c)}</span>
+            {situacao(c) === "Disponível" && <button onClick={() => revogar(c.id)} className="font-bold text-late">Revogar</button>}
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
 function AlunosAdmin() {
   const qc = useQueryClient();
   const { data: alunos } = useAlunos();
