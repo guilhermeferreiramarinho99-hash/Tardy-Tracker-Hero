@@ -39,20 +39,23 @@ export function useMe() {
       const { data } = await supabase.auth.getUser();
       const user = data.user;
       if (!user) return null;
-      const [prof, roles, escola] = await Promise.all([
-        supabase.from("profiles").select("nome,email").eq("id", user.id).maybeSingle(),
+      const [prof, roles, escola, sa] = await Promise.all([
+        supabase.from("profiles").select("nome,email,usuario").eq("id", user.id).maybeSingle(),
         supabase.from("user_roles").select("role").eq("user_id", user.id),
-        supabase.from("escolas").select("id,nome").maybeSingle(),
+        supabase.from("escolas").select("id,nome,status,email_institucional,endereco,cidade,estado,cep,telefone").maybeSingle(),
+        supabase.rpc("eh_superadmin", {}),
       ]);
       if (prof.error) throw prof.error;
       if (roles.error) throw roles.error;
       if (escola.error) throw escola.error;
-      const r = (roles.data ?? []).map((x) => x.role as Papel);
+      const r = (roles.data ?? []).map((x) => x.role as Papel).filter((x) => x in papelNome);
       return {
         id: user.id,
         escola: escola.data,
+        rascunho: (user.user_metadata?.pontual_rascunho ?? null) as Rascunho | null,
         nome: prof.data?.nome || user.email || "Usuário",
         roles: r,
+        ehSuperadmin: !!sa.data,
         isAdmin: r.includes("admin"),
         isGestor: r.includes("admin") || r.includes("coordenacao"),
         isStaff: r.some((x) => x !== "aluno"),
@@ -61,6 +64,12 @@ export function useMe() {
     },
   });
 }
+
+export type Rascunho =
+  | { tipo: "convite"; codigo: string }
+  | { tipo: "escola"; nome: string; email_institucional: string; endereco: string; cidade: string; estado: string; cep: string; telefone: string };
+
+export const ANOS = ["6º ano", "7º ano", "8º ano", "9º ano", "1ª série", "2ª série", "3ª série"];
 
 export const useTurmas = () =>
   useQuery({ queryKey: ["turmas"], queryFn: async () => unwrap(await supabase.from("turmas").select("*").order("ordem")) });
