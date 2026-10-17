@@ -68,13 +68,24 @@ function Usuarios({ meuId }: { meuId: string | undefined }) {
     toast.success("Conta vinculada ao aluno.");
     qc.invalidateQueries();
   };
+  const salvarUsuario = async (uid: string, usuario: string) => {
+    const { error } = await supabase.rpc("definir_usuario", { _user: uid, _usuario: usuario });
+    if (error) { toast.error(erroAmigavel(error)); return; }
+    toast.success("Nome de usuário salvo.");
+    qc.invalidateQueries();
+  };
   return (
     <div className="space-y-4">
-      <p className="text-sm text-muted-foreground">Solicitações da sua escola</p>
+      <Convites />
+      <h2 className="border-t pt-5 font-bold">Pessoas autorizadas</h2>
       <ul className="divide-y">
         {data?.map((u) => (
           <li key={u.id} className="space-y-2 py-4">
             <div className="font-bold">{u.nome || "(sem nome)"} <span className="font-normal text-muted-foreground">· {u.email}</span></div>
+            <form className="flex gap-2" onSubmit={(e) => { e.preventDefault(); const v = new FormData(e.currentTarget).get("usuario"); salvarUsuario(u.id, String(v ?? "")); }}>
+              <input name="usuario" aria-label={`Nome de usuário de ${u.nome}`} defaultValue={u.usuario ?? ""} placeholder="Nome de usuário para entrar" className={`${input} flex-1 text-sm`} />
+              <button className="rounded-xl border px-3 text-sm font-bold">Salvar</button>
+            </form>
             <div className="flex flex-wrap gap-3">
               {(Object.keys(papelNome) as Papel[]).map((r) => (
                 <label key={r} className="flex items-center gap-2 rounded-lg border px-3 py-2 text-sm font-semibold">
