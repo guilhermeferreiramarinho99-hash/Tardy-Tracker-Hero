@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { CalendarDays, Clock, ShieldCheck } from "lucide-react";
+import logo from "@/assets/logo.png";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -20,6 +21,7 @@ function Inicio() {
     <div className="flex min-h-screen flex-col bg-hero text-navy-foreground">
       <div className="mx-auto flex w-full max-w-md flex-1 flex-col justify-center gap-8 px-6 py-12">
         <div>
+          <img src={logo} alt="Logo do Pontual+" className="mb-5 size-24 rounded-3xl bg-card p-2 shadow-lg" />
           <div className="text-5xl font-extrabold">Pontual<span className="text-justified">+</span></div>
           <p className="mt-3 text-lg opacity-85">Registro digital de atrasos para a equipe escolar e a coordenação.</p>
         </div>
@@ -28,7 +30,11 @@ function Inicio() {
           <li className="flex gap-3"><CalendarDays className="shrink-0" /> Histórico por bimestre e calendário</li>
           <li className="flex gap-3"><ShieldCheck className="shrink-0" /> Acesso individual e protegido por perfil</li>
         </ul>
-        <Link to="/auth" className="rounded-2xl bg-card py-4 text-center text-lg font-extrabold text-primary">Entrar</Link>
+        <div className="space-y-3">
+          <Link to="/auth" className="block rounded-2xl bg-card py-4 text-center text-lg font-extrabold text-primary">Entrar</Link>
+          <Link to="/cadastrar-escola" className="block rounded-2xl border-2 border-current py-4 text-center text-lg font-extrabold">Cadastrar minha escola</Link>
+          <Link to="/convite" className="block text-center font-semibold underline opacity-90">Recebi um convite</Link>
+        </div>
       </div>
     </div>
   );
