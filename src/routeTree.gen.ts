@@ -12,6 +12,8 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as AuthRouteImport } from './routes/auth'
+import { Route as CadastrarEscolaRouteImport } from './routes/cadastrar-escola'
+import { Route as ConviteRouteImport } from './routes/convite'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as AuthenticatedAlertasRouteImport } from './routes/_authenticated/alertas'
@@ -33,6 +35,16 @@ const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
   path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CadastrarEscolaRoute = CadastrarEscolaRouteImport.update({
+  id: '/cadastrar-escola',
+  path: '/cadastrar-escola',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ConviteRoute = ConviteRouteImport.update({
+  id: '/convite',
+  path: '/convite',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ResetPasswordRoute = ResetPasswordRouteImport.update({
@@ -81,6 +93,8 @@ const AuthenticatedAlunosIdRoute = AuthenticatedAlunosIdRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/cadastrar-escola': typeof CadastrarEscolaRoute
+  '/convite': typeof ConviteRoute
   '/reset-password': typeof ResetPasswordRoute
   '/admin': typeof AuthenticatedAdminRoute
   '/alertas': typeof AuthenticatedAlertasRoute
@@ -93,6 +107,8 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/cadastrar-escola': typeof CadastrarEscolaRoute
+  '/convite': typeof ConviteRoute
   '/reset-password': typeof ResetPasswordRoute
   '/admin': typeof AuthenticatedAdminRoute
   '/alertas': typeof AuthenticatedAlertasRoute
@@ -107,6 +123,8 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
+  '/cadastrar-escola': typeof CadastrarEscolaRoute
+  '/convite': typeof ConviteRoute
   '/reset-password': typeof ResetPasswordRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRoute
   '/_authenticated/alertas': typeof AuthenticatedAlertasRoute
@@ -121,6 +139,8 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/auth'
+    | '/cadastrar-escola'
+    | '/convite'
     | '/reset-password'
     | '/admin'
     | '/alertas'
@@ -133,6 +153,8 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/auth'
+    | '/cadastrar-escola'
+    | '/convite'
     | '/reset-password'
     | '/admin'
     | '/alertas'
@@ -146,6 +168,8 @@ export interface FileRouteTypes {
     | '/'
     | '/_authenticated'
     | '/auth'
+    | '/cadastrar-escola'
+    | '/convite'
     | '/reset-password'
     | '/_authenticated/admin'
     | '/_authenticated/alertas'
@@ -160,6 +184,8 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AuthRoute: typeof AuthRoute
+  CadastrarEscolaRoute: typeof CadastrarEscolaRoute
+  ConviteRoute: typeof ConviteRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
 }
 
@@ -184,6 +210,20 @@ declare module '@tanstack/react-router' {
       path: '/auth'
       fullPath: '/auth'
       preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/cadastrar-escola': {
+      id: '/cadastrar-escola'
+      path: '/cadastrar-escola'
+      fullPath: '/cadastrar-escola'
+      preLoaderRoute: typeof CadastrarEscolaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/convite': {
+      id: '/convite'
+      path: '/convite'
+      fullPath: '/convite'
+      preLoaderRoute: typeof ConviteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/reset-password': {
@@ -272,6 +312,8 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AuthRoute: AuthRoute,
+  CadastrarEscolaRoute: CadastrarEscolaRoute,
+  ConviteRoute: ConviteRoute,
   ResetPasswordRoute: ResetPasswordRoute,
 }
 export const routeTree = rootRouteImport
