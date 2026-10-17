@@ -52,7 +52,7 @@ export function useMe() {
       return {
         id: user.id,
         escola: escola.data,
-        rascunho: (user.user_metadata?.pontual_rascunho ?? null) as Rascunho | null,
+        rascunho: (user.user_metadata?.["pontual_rascunho"] ?? null) as Rascunho | null,
         nome: prof.data?.nome || user.email || "Usuário",
         roles: r,
         ehSuperadmin: !!sa.data,
