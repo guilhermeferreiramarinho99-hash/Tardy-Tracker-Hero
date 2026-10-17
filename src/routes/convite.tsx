@@ -6,7 +6,7 @@ import { criarConta } from "@/lib/cadastro";
 import { erroAmigavel } from "@/lib/api";
 
 export const Route = createFileRoute("/convite")({
-  validateSearch: (s: Record<string, unknown>) => ({ codigo: typeof s.codigo === "string" ? s.codigo : undefined }),
+  validateSearch: (s: Record<string, unknown>): { codigo?: string } => ({ codigo: typeof s["codigo"] === "string" ? s["codigo"] : undefined }),
   head: () => ({
     meta: [
       { title: "Aceitar convite — Pontual+" },

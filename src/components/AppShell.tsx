@@ -25,7 +25,7 @@ export function AppShell({ children }: { children: ReactNode }) {
   if (isLoading) return <div className="grid min-h-screen place-items-center text-muted-foreground">Carregando…</div>;
   if (isError) return <div className="grid min-h-screen place-items-center p-6"><Button onClick={() => refetch()}>Tentar carregar sua escola novamente</Button></div>;
   if (!me) return null;
-  if (!me.escola) return <EscolhaEscola sair={sair} />;
+  if (!me.escola) return <EscolhaEscola sair={sair} rascunho={me.rascunho} />;
 
   if (me.roles.length === 0) {
     return (
