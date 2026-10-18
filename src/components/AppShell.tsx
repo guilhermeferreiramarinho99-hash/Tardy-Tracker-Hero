@@ -1,6 +1,6 @@
 import { Link, useNavigate } from "@tanstack/react-router";
 import { useQueryClient } from "@tanstack/react-query";
-import { Bell, CalendarDays, Clock, Home, LogOut, Settings, Users, Hourglass } from "lucide-react";
+import { Bell, CalendarDays, Clock, Home, LogOut, Settings, Users, Hourglass, FileSpreadsheet, ShieldCheck } from "lucide-react";
 import type { ReactNode } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAlertas, useMe } from "@/lib/api";
@@ -27,6 +27,21 @@ export function AppShell({ children }: { children: ReactNode }) {
   if (!me) return null;
   if (!me.escola) return <EscolhaEscola sair={sair} rascunho={me.rascunho} />;
 
+  if (me.escola.status !== "ativa") {
+    const recusada = me.escola.status === "recusada";
+    return (
+      <div className="grid min-h-screen place-items-center p-6 text-center">
+        <div className="max-w-sm space-y-4">
+          <Hourglass className="mx-auto size-12 text-primary" />
+          <h1 className="text-2xl font-extrabold">{recusada ? "Cadastro não aprovado" : "Aguardando verificação"}</h1>
+          <p className="font-bold">{me.escola.nome}</p>
+          <p className="text-muted-foreground">{recusada ? "O cadastro desta escola não foi aprovado. Entre em contato com o suporte do Pontual+." : "Recebemos o cadastro da sua escola. Assim que for verificado, você terá acesso como administrador."}</p>
+          <button onClick={sair} className="rounded-xl border bg-card px-5 py-3 font-bold">Sair</button>
+        </div>
+      </div>
+    );
+  }
+
   if (me.roles.length === 0) {
     return (
       <div className="grid min-h-screen place-items-center p-6 text-center">
@@ -47,7 +62,9 @@ export function AppShell({ children }: { children: ReactNode }) {
     me.isStaff && { to: "/registrar", label: "Registrar", icon: Clock },
     me.isStaff && { to: "/alunos", label: "Alunos", icon: Users },
     me.isGestor && { to: "/alertas", label: "Alertas", icon: Bell, badge: pend },
+    me.isStaff && { to: "/relatorios", label: "Relatórios", icon: FileSpreadsheet },
     me.isAdmin && { to: "/admin", label: "Admin", icon: Settings },
+    me.ehSuperadmin && { to: "/verificacao", label: "Verificação", icon: ShieldCheck },
     me.isAluno && !me.isStaff && { to: "/meu-historico", label: "Meu histórico", icon: CalendarDays },
   ].filter(Boolean) as { to: "/inicio"; label: string; icon: typeof Home; badge?: number }[];
 
