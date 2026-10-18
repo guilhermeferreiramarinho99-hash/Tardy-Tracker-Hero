@@ -20,6 +20,8 @@ import { Route as AuthenticatedAlertasRouteImport } from './routes/_authenticate
 import { Route as AuthenticatedInicioRouteImport } from './routes/_authenticated/inicio'
 import { Route as AuthenticatedMeuHistoricoRouteImport } from './routes/_authenticated/meu-historico'
 import { Route as AuthenticatedRegistrarRouteImport } from './routes/_authenticated/registrar'
+import { Route as AuthenticatedRelatoriosRouteImport } from './routes/_authenticated/relatorios'
+import { Route as AuthenticatedVerificacaoRouteImport } from './routes/_authenticated/verificacao'
 import { Route as AuthenticatedAlunosIndexRouteImport } from './routes/_authenticated/alunos.index'
 import { Route as AuthenticatedAlunosIdRouteImport } from './routes/_authenticated/alunos.$id'
 
@@ -78,6 +80,17 @@ const AuthenticatedRegistrarRoute = AuthenticatedRegistrarRouteImport.update({
   path: '/registrar',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedRelatoriosRoute = AuthenticatedRelatoriosRouteImport.update({
+  id: '/relatorios',
+  path: '/relatorios',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedVerificacaoRoute =
+  AuthenticatedVerificacaoRouteImport.update({
+    id: '/verificacao',
+    path: '/verificacao',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedAlunosIndexRoute =
   AuthenticatedAlunosIndexRouteImport.update({
     id: '/alunos/',
@@ -101,6 +114,8 @@ export interface FileRoutesByFullPath {
   '/inicio': typeof AuthenticatedInicioRoute
   '/meu-historico': typeof AuthenticatedMeuHistoricoRoute
   '/registrar': typeof AuthenticatedRegistrarRoute
+  '/relatorios': typeof AuthenticatedRelatoriosRoute
+  '/verificacao': typeof AuthenticatedVerificacaoRoute
   '/alunos/$id': typeof AuthenticatedAlunosIdRoute
   '/alunos/': typeof AuthenticatedAlunosIndexRoute
 }
@@ -115,6 +130,8 @@ export interface FileRoutesByTo {
   '/inicio': typeof AuthenticatedInicioRoute
   '/meu-historico': typeof AuthenticatedMeuHistoricoRoute
   '/registrar': typeof AuthenticatedRegistrarRoute
+  '/relatorios': typeof AuthenticatedRelatoriosRoute
+  '/verificacao': typeof AuthenticatedVerificacaoRoute
   '/alunos/$id': typeof AuthenticatedAlunosIdRoute
   '/alunos': typeof AuthenticatedAlunosIndexRoute
 }
@@ -131,6 +148,8 @@ export interface FileRoutesById {
   '/_authenticated/inicio': typeof AuthenticatedInicioRoute
   '/_authenticated/meu-historico': typeof AuthenticatedMeuHistoricoRoute
   '/_authenticated/registrar': typeof AuthenticatedRegistrarRoute
+  '/_authenticated/relatorios': typeof AuthenticatedRelatoriosRoute
+  '/_authenticated/verificacao': typeof AuthenticatedVerificacaoRoute
   '/_authenticated/alunos/$id': typeof AuthenticatedAlunosIdRoute
   '/_authenticated/alunos/': typeof AuthenticatedAlunosIndexRoute
 }
@@ -147,6 +166,8 @@ export interface FileRouteTypes {
     | '/inicio'
     | '/meu-historico'
     | '/registrar'
+    | '/relatorios'
+    | '/verificacao'
     | '/alunos/$id'
     | '/alunos/'
   fileRoutesByTo: FileRoutesByTo
@@ -161,6 +182,8 @@ export interface FileRouteTypes {
     | '/inicio'
     | '/meu-historico'
     | '/registrar'
+    | '/relatorios'
+    | '/verificacao'
     | '/alunos/$id'
     | '/alunos'
   id:
@@ -176,6 +199,8 @@ export interface FileRouteTypes {
     | '/_authenticated/inicio'
     | '/_authenticated/meu-historico'
     | '/_authenticated/registrar'
+    | '/_authenticated/relatorios'
+    | '/_authenticated/verificacao'
     | '/_authenticated/alunos/$id'
     | '/_authenticated/alunos/'
   fileRoutesById: FileRoutesById
@@ -268,6 +293,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedRegistrarRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/relatorios': {
+      id: '/_authenticated/relatorios'
+      path: '/relatorios'
+      fullPath: '/relatorios'
+      preLoaderRoute: typeof AuthenticatedRelatoriosRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/verificacao': {
+      id: '/_authenticated/verificacao'
+      path: '/verificacao'
+      fullPath: '/verificacao'
+      preLoaderRoute: typeof AuthenticatedVerificacaoRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/alunos/': {
       id: '/_authenticated/alunos/'
       path: '/alunos'
@@ -291,6 +330,8 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedInicioRoute: typeof AuthenticatedInicioRoute
   AuthenticatedMeuHistoricoRoute: typeof AuthenticatedMeuHistoricoRoute
   AuthenticatedRegistrarRoute: typeof AuthenticatedRegistrarRoute
+  AuthenticatedRelatoriosRoute: typeof AuthenticatedRelatoriosRoute
+  AuthenticatedVerificacaoRoute: typeof AuthenticatedVerificacaoRoute
   AuthenticatedAlunosIdRoute: typeof AuthenticatedAlunosIdRoute
   AuthenticatedAlunosIndexRoute: typeof AuthenticatedAlunosIndexRoute
 }
@@ -301,6 +342,8 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedInicioRoute: AuthenticatedInicioRoute,
   AuthenticatedMeuHistoricoRoute: AuthenticatedMeuHistoricoRoute,
   AuthenticatedRegistrarRoute: AuthenticatedRegistrarRoute,
+  AuthenticatedRelatoriosRoute: AuthenticatedRelatoriosRoute,
+  AuthenticatedVerificacaoRoute: AuthenticatedVerificacaoRoute,
   AuthenticatedAlunosIdRoute: AuthenticatedAlunosIdRoute,
   AuthenticatedAlunosIndexRoute: AuthenticatedAlunosIndexRoute,
 }
