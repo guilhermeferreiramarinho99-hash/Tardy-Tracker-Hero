@@ -16,7 +16,7 @@ export const lerListaAlunos = createServerFn({ method: "POST" })
   .handler(async ({ data, context }) => {
     const { data: admin } = await context.supabase.rpc("has_role", { _user_id: context.userId, _role: "admin" });
     if (!admin) throw new Error("Apenas a administração pode importar alunos.");
-    const key = process.env.LOVABLE_API_KEY;
+    const key = process.env["LOVABLE_API_KEY"];
     if (!key) throw new Error("Leitura de arquivos não configurada.");
 
     const ehPdf = data.dataUrl.startsWith("data:application/pdf");

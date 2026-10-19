@@ -28,7 +28,7 @@ async function reduzirFoto(f: File): Promise<string> {
 async function lerPlanilha(f: File): Promise<AlunoLido[]> {
   const XLSX = await import("xlsx");
   const wb = XLSX.read(await f.arrayBuffer(), { type: "array", raw: false });
-  const linhas = XLSX.utils.sheet_to_json<string[]>(wb.Sheets[wb.SheetNames[0]], { header: 1, raw: false, defval: "" });
+  const linhas = XLSX.utils.sheet_to_json<string[]>(wb.Sheets[wb.SheetNames[0] ?? ""]!, { header: 1, raw: false, defval: "" });
   const out: AlunoLido[] = [];
   for (const l of linhas) {
     const cel = l.map((x) => String(x ?? "").trim()).filter(Boolean);
