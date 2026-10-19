@@ -5,8 +5,9 @@ import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { PageHeader, SemPermissao } from "@/components/AppShell";
 import { EscolaAdmin, TurmasAdmin } from "@/components/EscolaAdmin";
+import { ImportarAlunos } from "@/components/ImportarAlunos";
 import { pageHead } from "@/lib/page-head";
-import { erroAmigavel, fmtData, hojeISO, papelNome, useAlunos, useConfig, useMe, usePeriodos, useTurmas, type Papel } from "@/lib/api";
+import { combinaBusca, erroAmigavel, fmtData, hojeISO, papelNome, useAlunos, useConfig, useMe, usePeriodos, useTurmas, type Papel } from "@/lib/api";
 
 export const Route = createFileRoute("/_authenticated/admin")({
   head: () => pageHead("Administração", "Administre os acessos, as turmas e as regras da sua escola no Pontual+."),
@@ -217,9 +218,10 @@ function AlunosAdmin() {
 
   return (
     <div className="space-y-5">
-      <form onSubmit={salvarNovo} className="grid gap-2 sm:grid-cols-[2fr_1fr_1fr_auto]">
+      <ImportarAlunos />
+      <form onSubmit={salvarNovo} className="grid gap-2 sm:grid-cols-[1fr_2fr_1fr_auto]">
+        <input required placeholder="Código (ex.: 002)" value={codigo} onChange={(e) => setCodigo(e.target.value)} className={input} />
         <input required placeholder="Nome completo" value={nome} onChange={(e) => setNome(e.target.value)} className={input} />
-        <input required placeholder="Código interno" value={codigo} onChange={(e) => setCodigo(e.target.value)} className={input} />
         <select required value={turma} onChange={(e) => setTurma(e.target.value)} className={input}>
           <option value="">Turma</option>
           {turmas?.map((t) => <option key={t.id} value={t.id}>{t.nome}</option>)}
@@ -227,11 +229,11 @@ function AlunosAdmin() {
         <button className="rounded-xl bg-primary px-4 py-3 font-bold text-primary-foreground">Cadastrar</button>
       </form>
       <div className="flex flex-wrap items-center gap-2">
-        <input placeholder="Pesquisar" value={busca} onChange={(e) => setBusca(e.target.value)} className={`${input} min-w-48 flex-1`} />
+        <input placeholder="Pesquisar por código ou nome" value={busca} onChange={(e) => setBusca(e.target.value)} className={`${input} min-w-48 flex-1`} />
         <button onClick={exportar} className="rounded-xl border px-4 py-3 font-bold">Exportar CSV</button>
       </div>
       <ul className="divide-y">
-        {alunos?.filter((a) => a.nome.toLowerCase().includes(busca.toLowerCase())).map((a) => (
+        {alunos?.filter((a) => combinaBusca(a, busca)).map((a) => (
           <li key={a.id} className="flex flex-wrap items-center gap-2 py-3">
             <div className="min-w-48 flex-1"><div className="font-semibold">{a.nome}</div><div className="text-xs text-muted-foreground">{a.codigo}</div></div>
             <button className="text-sm font-semibold text-primary" onClick={() => { const n = window.prompt("Corrigir nome:", a.nome); if (n?.trim() && n.trim() !== a.nome) atualizar(a.id, { nome: n.trim() }); }}>Editar nome</button>
@@ -261,10 +263,17 @@ function Bimestres() {
     setN({ nome: "", inicio: "", fim: "" });
     qc.invalidateQueries({ queryKey: ["periodos"] });
   };
+  const excluir = async (id: string, nome: string) => {
+    if (!window.confirm(`Excluir o bimestre "${nome}"? Os atrasos registrados continuam guardados no histórico.`)) return;
+    const { error } = await supabase.rpc("excluir_periodo", { _id: id });
+    if (error) { toast.error(erroAmigavel(error)); return; }
+    toast.success("Bimestre excluído.");
+    qc.invalidateQueries({ queryKey: ["periodos"] });
+  };
   return (
     <div className="space-y-4">
       <p className="text-sm text-muted-foreground">Use as datas do calendário oficial da escola. Os bimestres podem ter durações diferentes.</p>
-      {periodos?.map((p) => <LinhaPeriodo key={p.id} p={p} onSave={(v) => salvar(p.id, v)} />)}
+      {periodos?.map((p) => <LinhaPeriodo key={p.id} p={p} onSave={(v) => salvar(p.id, v)} onDelete={() => excluir(p.id, p.nome)} />)}
       <div className="border-t pt-4">
         <div className="mb-2 font-bold">Novo bimestre</div>
         <div className="grid gap-2 sm:grid-cols-[2fr_1fr_1fr_auto]">
@@ -278,15 +287,16 @@ function Bimestres() {
   );
 }
 
-function LinhaPeriodo({ p, onSave }: { p: { nome: string; inicio: string; fim: string }; onSave: (v: { nome: string; inicio: string; fim: string }) => void }) {
+function LinhaPeriodo({ p, onSave, onDelete }: { p: { nome: string; inicio: string; fim: string }; onSave: (v: { nome: string; inicio: string; fim: string }) => void; onDelete: () => void }) {
   const [v, setV] = useState({ nome: p.nome, inicio: p.inicio, fim: p.fim });
   const mudou = v.nome !== p.nome || v.inicio !== p.inicio || v.fim !== p.fim;
   return (
-    <div className="grid gap-2 sm:grid-cols-[2fr_1fr_1fr_auto]">
+    <div className="grid gap-2 sm:grid-cols-[2fr_1fr_1fr_auto_auto]">
       <input value={v.nome} onChange={(e) => setV({ ...v, nome: e.target.value })} className={input} />
       <input type="date" value={v.inicio} onChange={(e) => setV({ ...v, inicio: e.target.value })} className={input} />
       <input type="date" value={v.fim} onChange={(e) => setV({ ...v, fim: e.target.value })} className={input} />
       <button disabled={!mudou} onClick={() => onSave(v)} className="rounded-xl border px-4 py-3 font-bold disabled:opacity-40">Salvar</button>
+      <button onClick={onDelete} className="rounded-xl bg-late-soft px-4 py-3 font-bold text-late">Excluir</button>
     </div>
   );
 }

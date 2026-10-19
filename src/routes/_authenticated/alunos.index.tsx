@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Search } from "lucide-react";
 import { pageHead } from "@/lib/page-head";
 import { PageHeader, SemPermissao, Status } from "@/components/AppShell";
-import { hojeISO, periodoDe, useAlunos, useAtrasos, useMe, usePeriodos, useTurmas } from "@/lib/api";
+import { combinaBusca, hojeISO, periodoDe, useAlunos, useAtrasos, useMe, usePeriodos, useTurmas } from "@/lib/api";
 
 export const Route = createFileRoute("/_authenticated/alunos/")({
   head: () => pageHead("Alunos", "Consulta protegida de alunos e históricos da sua escola no Pontual+."),
@@ -20,7 +20,7 @@ function Alunos() {
   const [turmaId, setTurmaId] = useState("");
   if (me && !me.isStaff) return <SemPermissao />;
   const p = periodoDe(periodos, hojeISO());
-  const lista = (alunos ?? []).filter((a) => (!turmaId || a.turma_id === turmaId) && a.nome.toLowerCase().includes(busca.toLowerCase()));
+  const lista = (alunos ?? []).filter((a) => (!turmaId || a.turma_id === turmaId) && combinaBusca(a, busca));
 
   return (
     <>
@@ -29,7 +29,7 @@ function Alunos() {
         <div className="grid gap-3 md:grid-cols-[1fr_240px]">
           <div className="relative">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground" />
-            <input value={busca} onChange={(e) => setBusca(e.target.value)} placeholder="Pesquisar por nome" className="w-full rounded-xl border bg-card py-4 pl-12 pr-4 text-lg shadow-sm" />
+            <input value={busca} onChange={(e) => setBusca(e.target.value)} placeholder="Pesquisar por código ou nome" className="w-full rounded-xl border bg-card py-4 pl-12 pr-4 text-lg shadow-sm" />
           </div>
           <select value={turmaId} onChange={(e) => setTurmaId(e.target.value)} className="rounded-xl border bg-card px-4 py-4 text-lg shadow-sm">
             <option value="">Todas as turmas</option>
