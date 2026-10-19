@@ -110,3 +110,11 @@ export function periodoAtualOuUltimo(periodos: Periodo[] | undefined) {
   const h = hojeISO();
   return periodoDe(periodos, h) ?? [...(periodos ?? [])].reverse().find((p) => p.inicio <= h) ?? periodos?.[0];
 }
+
+/** Matches a student by school code (e.g. "002") or by name, ignoring accents and case. */
+export function combinaBusca(a: { nome: string; codigo: string }, busca: string) {
+  const norm = (s: string) => s.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim();
+  const b = norm(busca);
+  if (!b) return true;
+  return norm(a.codigo).includes(b) || norm(a.nome).includes(b);
+}

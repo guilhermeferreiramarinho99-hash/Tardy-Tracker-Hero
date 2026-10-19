@@ -7,7 +7,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { PageHeader, SemPermissao } from "@/components/AppShell";
 import { ehErroDeRede, enfileirar, estaSemInternet } from "@/lib/fila";
 import { pageHead } from "@/lib/page-head";
-import { erroAmigavel, fmtData, hojeISO, horaAtual, useAlunos, useMe, useTurmas } from "@/lib/api";
+import { combinaBusca, erroAmigavel, fmtData, hojeISO, horaAtual, useAlunos, useMe, useTurmas } from "@/lib/api";
 
 export const Route = createFileRoute("/_authenticated/registrar")({
   head: () => pageHead("Registrar atraso", "Registro autorizado de atrasos escolares no Pontual+."),
@@ -32,7 +32,7 @@ function Registrar() {
   if (me && !me.isStaff) return <SemPermissao />;
 
   const lista = (alunos ?? [])
-    .filter((a) => a.ativo && (!turmaId || a.turma_id === turmaId) && a.nome.toLowerCase().includes(busca.toLowerCase()));
+    .filter((a) => a.ativo && (!turmaId || a.turma_id === turmaId) && combinaBusca(a, busca));
   const aluno = alunos?.find((a) => a.id === alunoId);
   const nomeTurma = (id: string) => turmas?.find((t) => t.id === id)?.nome ?? "";
 
@@ -98,13 +98,13 @@ function Registrar() {
         <Step n={2} title="Pesquise e selecione o aluno">
           <div className="relative">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground" />
-            <input value={busca} onChange={(e) => setBusca(e.target.value)} placeholder="Digite o nome do aluno" className="w-full rounded-xl border bg-card py-4 pl-12 pr-4 text-lg" />
+            <input value={busca} onChange={(e) => setBusca(e.target.value)} placeholder="Digite o código (ex.: 002) ou o nome" className="w-full rounded-xl border bg-card py-4 pl-12 pr-4 text-lg" />
           </div>
           <div className="mt-3 max-h-72 divide-y overflow-auto rounded-xl border bg-card">
             {lista.length === 0 && <p className="p-4 text-muted-foreground">Nenhum aluno encontrado.</p>}
             {lista.map((a) => (
               <button key={a.id} onClick={() => setAlunoId(a.id)} className={`flex w-full items-center justify-between px-4 py-3 text-left ${alunoId === a.id ? "bg-accent" : ""}`}>
-                <span className="font-semibold">{a.nome}</span>
+                <span className="font-semibold"><span className="mr-2 font-mono text-muted-foreground">{a.codigo}</span>{a.nome}</span>
                 <span className="text-sm text-muted-foreground">{nomeTurma(a.turma_id)}</span>
               </button>
             ))}

@@ -78,6 +78,13 @@
       "when": 1792144609822,
       "tag": "0010_convites_e_verificacao",
       "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "7",
+      "when": 1792379854284,
+      "tag": "0011_excluir_bimestre_e_escola",
+      "breakpoints": true
     }
   ]
 }

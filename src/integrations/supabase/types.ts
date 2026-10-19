@@ -638,6 +638,8 @@ export type Database = {
       eh_superadmin: { Args: { _user?: string }; Returns: boolean }
       entrar_escola: { Args: { _codigo: string }; Returns: undefined }
       excluir_aluno: { Args: { _id: string }; Returns: undefined }
+      excluir_escola: { Args: { _confirmacao: string }; Returns: undefined }
+      excluir_periodo: { Args: { _id: string }; Returns: undefined }
       gerar_convite: {
         Args: { _papel: Database["public"]["Enums"]["app_role"] }
         Returns: string
@@ -649,6 +651,7 @@ export type Database = {
         }
         Returns: boolean
       }
+      importar_alunos: { Args: { _lista: Json; _turma: string }; Returns: Json }
       is_gestor: { Args: { _user_id: string }; Returns: boolean }
       is_staff: { Args: { _user_id: string }; Returns: boolean }
       listar_escolas_pendentes: {
