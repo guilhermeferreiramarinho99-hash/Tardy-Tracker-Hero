@@ -92,6 +92,13 @@
       "when": 1795279860330,
       "tag": "0012_fechar_cadastro_de_escolas",
       "breakpoints": true
+    },
+    {
+      "idx": 13,
+      "version": "7",
+      "when": 1795280233062,
+      "tag": "0013_senha_adicional_escola",
+      "breakpoints": true
     }
   ]
 }

@@ -1,8 +1,9 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, redirect } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
 import { nomeEscola } from "@/lib/escola";
 
 export const Route = createFileRoute("/cadastrar-escola")({
+  beforeLoad: () => { throw redirect({ to: "/auth", replace: true }); },
   head: () => ({ meta: [
     { title: "Acesso da escola — Pontual+" },
     { name: "description", content: `Acesso exclusivo da ${nomeEscola}.` },

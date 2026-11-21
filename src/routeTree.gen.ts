@@ -15,6 +15,7 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as CadastrarEscolaRouteImport } from './routes/cadastrar-escola'
 import { Route as ConviteRouteImport } from './routes/convite'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
+import { Route as SenhaEscolaRouteImport } from './routes/senha-escola'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as AuthenticatedAlertasRouteImport } from './routes/_authenticated/alertas'
 import { Route as AuthenticatedInicioRouteImport } from './routes/_authenticated/inicio'
@@ -52,6 +53,11 @@ const ConviteRoute = ConviteRouteImport.update({
 const ResetPasswordRoute = ResetPasswordRouteImport.update({
   id: '/reset-password',
   path: '/reset-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SenhaEscolaRoute = SenhaEscolaRouteImport.update({
+  id: '/senha-escola',
+  path: '/senha-escola',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
@@ -109,6 +115,7 @@ export interface FileRoutesByFullPath {
   '/cadastrar-escola': typeof CadastrarEscolaRoute
   '/convite': typeof ConviteRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/senha-escola': typeof SenhaEscolaRoute
   '/admin': typeof AuthenticatedAdminRoute
   '/alertas': typeof AuthenticatedAlertasRoute
   '/inicio': typeof AuthenticatedInicioRoute
@@ -125,6 +132,7 @@ export interface FileRoutesByTo {
   '/cadastrar-escola': typeof CadastrarEscolaRoute
   '/convite': typeof ConviteRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/senha-escola': typeof SenhaEscolaRoute
   '/admin': typeof AuthenticatedAdminRoute
   '/alertas': typeof AuthenticatedAlertasRoute
   '/inicio': typeof AuthenticatedInicioRoute
@@ -143,6 +151,7 @@ export interface FileRoutesById {
   '/cadastrar-escola': typeof CadastrarEscolaRoute
   '/convite': typeof ConviteRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/senha-escola': typeof SenhaEscolaRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRoute
   '/_authenticated/alertas': typeof AuthenticatedAlertasRoute
   '/_authenticated/inicio': typeof AuthenticatedInicioRoute
@@ -161,6 +170,7 @@ export interface FileRouteTypes {
     | '/cadastrar-escola'
     | '/convite'
     | '/reset-password'
+    | '/senha-escola'
     | '/admin'
     | '/alertas'
     | '/inicio'
@@ -177,6 +187,7 @@ export interface FileRouteTypes {
     | '/cadastrar-escola'
     | '/convite'
     | '/reset-password'
+    | '/senha-escola'
     | '/admin'
     | '/alertas'
     | '/inicio'
@@ -194,6 +205,7 @@ export interface FileRouteTypes {
     | '/cadastrar-escola'
     | '/convite'
     | '/reset-password'
+    | '/senha-escola'
     | '/_authenticated/admin'
     | '/_authenticated/alertas'
     | '/_authenticated/inicio'
@@ -212,6 +224,7 @@ export interface RootRouteChildren {
   CadastrarEscolaRoute: typeof CadastrarEscolaRoute
   ConviteRoute: typeof ConviteRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
+  SenhaEscolaRoute: typeof SenhaEscolaRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -256,6 +269,13 @@ declare module '@tanstack/react-router' {
       path: '/reset-password'
       fullPath: '/reset-password'
       preLoaderRoute: typeof ResetPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/senha-escola': {
+      id: '/senha-escola'
+      path: '/senha-escola'
+      fullPath: '/senha-escola'
+      preLoaderRoute: typeof SenhaEscolaRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated/admin': {
@@ -358,6 +378,7 @@ const rootRouteChildren: RootRouteChildren = {
   CadastrarEscolaRoute: CadastrarEscolaRoute,
   ConviteRoute: ConviteRoute,
   ResetPasswordRoute: ResetPasswordRoute,
+  SenhaEscolaRoute: SenhaEscolaRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

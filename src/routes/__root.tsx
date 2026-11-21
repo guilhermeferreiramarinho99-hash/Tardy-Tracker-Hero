@@ -1,6 +1,6 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import {
-  Outlet, Link, createRootRouteWithContext, useRouter, HeadContent, Scripts,
+  Outlet, Link, createRootRouteWithContext, useRouter, HeadContent, Scripts, redirect,
   type ErrorComponentProps,
 } from "@tanstack/react-router";
 import { useEffect, type ReactNode } from "react";
@@ -9,6 +9,7 @@ import { Toaster } from "sonner";
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { supabase } from "@/integrations/supabase/client";
+import { schoolGateStatus } from "@/lib/gate.functions";
 
 function NotFoundComponent() {
   return (
@@ -36,6 +37,13 @@ function ErrorComponent({ error, reset }: ErrorComponentProps) {
 }
 
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
+  beforeLoad: async ({ location }) => {
+    if (location.pathname === "/senha-escola") return;
+    // Already authenticated offline workflows retain the existing account/RLS protections.
+    if (typeof window !== "undefined" && navigator.onLine === false) return;
+    const status = await schoolGateStatus();
+    if (!status.unlocked) throw redirect({ to: "/senha-escola" });
+  },
   head: () => ({
     meta: [
       { charSet: "utf-8" },

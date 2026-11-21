@@ -6,6 +6,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { PageHeader, SemPermissao } from "@/components/AppShell";
 import { EscolaAdmin, TurmasAdmin } from "@/components/EscolaAdmin";
 import { ImportarAlunos } from "@/components/ImportarAlunos";
+import { SenhaEscolaAdmin } from "@/components/SenhaEscolaAdmin";
 import { pageHead } from "@/lib/page-head";
 import { combinaBusca, erroAmigavel, fmtData, hojeISO, papelNome, useAlunos, useConfig, useMe, usePeriodos, useTurmas, type Papel } from "@/lib/api";
 
@@ -31,7 +32,7 @@ function Admin() {
           ))}
         </div>
         <section className="rounded-2xl border bg-card p-5">
-          {aba === "Escola" && <EscolaAdmin />}
+          {aba === "Escola" && <><EscolaAdmin /><SenhaEscolaAdmin /></>}
           {aba === "Turmas" && <TurmasAdmin />}
           {aba === "Usuários" && <Usuarios meuId={me?.id} />}
           {aba === "Alunos" && <AlunosAdmin />}

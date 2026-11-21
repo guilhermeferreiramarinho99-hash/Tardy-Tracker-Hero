@@ -512,6 +512,24 @@ export type Database = {
         }
         Relationships: []
       }
+      site_gate_config: {
+        Row: {
+          id: number
+          password_digest: string
+          version: string
+        }
+        Insert: {
+          id: number
+          password_digest: string
+          version?: string
+        }
+        Update: {
+          id?: number
+          password_digest?: string
+          version?: string
+        }
+        Relationships: []
+      }
       turmas: {
         Row: {
           ano: string
@@ -693,6 +711,7 @@ export type Database = {
       }
       resgatar_convite: { Args: { _codigo: string }; Returns: string }
       revogar_convite: { Args: { _id: string }; Returns: undefined }
+      trocar_senha_escola: { Args: { _digest: string }; Returns: string }
       verificar_escola: {
         Args: { _aprovar: boolean; _escola: string }
         Returns: undefined
