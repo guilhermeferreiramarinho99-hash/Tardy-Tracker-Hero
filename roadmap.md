@@ -1,5 +1,9 @@
 # Login próprio, cadastro de escolas e relatórios
 
+## Pedido atual
+- [ ] Opção de excluir usuários — aguardando esclarecer o “Não” enviado pelo usuário.
+- [ ] Baixar backup de alunos, turmas e atrasos, com códigos escolares como texto (ex.: 002) — aguardando esclarecer o “Não”.
+
 - [ ] Logo na tela inicial e nas telas de entrada.
 - [ ] Banco: campos da escola (e-mail, endereço, cidade, estado, CEP, telefone), status "Aguardando verificação", nome de usuário por perfil, papel "superadmin".
 - [ ] Cadastro público de escola (com dados do responsável) sem liberar acesso; duplicidade por nome normalizado + cidade/estado.
