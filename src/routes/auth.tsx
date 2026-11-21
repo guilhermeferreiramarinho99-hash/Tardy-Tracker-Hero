@@ -4,6 +4,7 @@ import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import logo from "@/assets/logo.png";
 import { Button } from "@/components/ui/button";
+import { nomeEscola } from "@/lib/escola";
 
 export const Route = createFileRoute("/auth")({
   head: () => ({
@@ -19,7 +20,7 @@ export const Route = createFileRoute("/auth")({
   component: Auth,
 });
 
-function Auth() {
+export function Auth() {
   const navigate = useNavigate();
   const [modo, setModo] = useState<"entrar" | "esqueci">("entrar");
   const [login, setLogin] = useState("");
@@ -65,7 +66,7 @@ function Auth() {
       <div className="px-6 pb-10 pt-12 text-center text-navy-foreground">
         <img src={logo} alt="Logo do Pontual+" className="mx-auto mb-3 size-20 rounded-3xl bg-card p-2" />
         <div className="text-4xl font-extrabold">Pontual<span className="text-justified">+</span></div>
-        <p className="mt-2 opacity-80">Registro de atrasos escolares</p>
+        <p className="mx-auto mt-2 max-w-sm text-base font-semibold">{nomeEscola}</p>
       </div>
       <div className="flex-1 rounded-t-3xl bg-background px-6 py-8">
         <form onSubmit={enviar} className="mx-auto max-w-sm space-y-4">
@@ -80,7 +81,6 @@ function Auth() {
               ? <button type="button" onClick={() => setModo("esqueci")}>Esqueci minha senha</button>
               : <button type="button" onClick={() => setModo("entrar")}>Voltar para entrar</button>}
             <Link to="/convite">Recebi um convite</Link>
-            <Link to="/cadastrar-escola">Cadastrar minha escola</Link>
           </div>
           <p className="pt-4 text-center text-xs text-muted-foreground">Acesso somente para pessoas autorizadas pela escola.</p>
         </form>

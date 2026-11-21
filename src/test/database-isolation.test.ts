@@ -12,5 +12,6 @@ describe("Database school isolation (real PostgreSQL, actual migrations)", () =>
       maxBuffer: 2 * 1024 * 1024,
     });
     expect(output).toContain("PASS: school isolation, authorized writes, role restrictions, audit and rollback");
+    expect(output).toContain("PASS: single-school registration blocked; invitations preserved");
   }, 100_000);
 });

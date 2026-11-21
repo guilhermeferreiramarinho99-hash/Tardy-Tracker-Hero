@@ -43,4 +43,5 @@ for migration in "$root"/drizzle/migrations/[0-9][0-9][0-9][0-9]_*.sql; do
   fi
 done
 psql -X -v ON_ERROR_STOP=1 -q -f "$root/tests/database/school-isolation.sql"
+psql -X -v ON_ERROR_STOP=1 -q -f "$root/tests/database/single-school.sql"
 echo 'PASS: school isolation, authorized writes, role restrictions, audit and rollback'

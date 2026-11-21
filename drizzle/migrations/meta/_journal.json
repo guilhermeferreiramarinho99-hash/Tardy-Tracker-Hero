@@ -85,6 +85,13 @@
       "when": 1792379854284,
       "tag": "0011_excluir_bimestre_e_escola",
       "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "7",
+      "when": 1795279860330,
+      "tag": "0012_fechar_cadastro_de_escolas",
+      "breakpoints": true
     }
   ]
 }

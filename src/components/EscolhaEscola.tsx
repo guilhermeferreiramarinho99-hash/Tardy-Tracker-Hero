@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { Building2, LogOut, Ticket } from "lucide-react";
-import { Link } from "@tanstack/react-router";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { erroAmigavel, type Rascunho } from "@/lib/api";
@@ -43,7 +42,7 @@ export function EscolhaEscola({ sair, rascunho }: { sair: () => Promise<void>; r
         </label>
         <Button disabled={enviando} className="h-12 w-full">Usar convite</Button>
       </form>
-      <p className="text-center text-sm">É responsável por uma escola? Saia e use <Link to="/cadastrar-escola" className="font-bold text-primary">Cadastrar minha escola</Link> com outro e-mail.</p>
+      <p className="text-center text-sm">Peça um convite à administração da escola para liberar seu acesso.</p>
       <Button variant="ghost" onClick={sair}><LogOut /> Sair da conta</Button>
     </main>
   );

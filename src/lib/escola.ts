@@ -1,0 +1,1 @@
+export const nomeEscola = "Escola Estadual Menodora Fialho de Figueiredo";
