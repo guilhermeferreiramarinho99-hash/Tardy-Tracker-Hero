@@ -1,7 +1,6 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { toast } from "sonner";
-import { MailCheck } from "lucide-react";
 import { criarConta } from "@/lib/cadastro";
 import { erroAmigavel } from "@/lib/api";
 import logo from "@/assets/logo.png";
@@ -26,7 +25,6 @@ function Cadastro() {
   const navigate = useNavigate();
   const [f, setF] = useState(vazio);
   const [enviando, setEnviando] = useState(false);
-  const [pronto, setPronto] = useState(false);
   const set = (k: keyof typeof vazio) => (e: React.ChangeEvent<HTMLInputElement>) => setF({ ...f, [k]: e.target.value });
   const enviar = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -36,7 +34,7 @@ function Cadastro() {
         tipo: "escola", nome: f.nome.trim(), email_institucional: f.email_institucional.trim(), endereco: f.endereco.trim(),
         cidade: f.cidade.trim(), estado: f.estado.trim().toUpperCase(), cep: f.cep.trim(), telefone: f.telefone.trim(),
       });
-      if (r.logado) navigate({ to: "/inicio" }); else setPronto(true);
+      if (r.logado) navigate({ to: "/inicio" });
     } catch (err) { toast.error(erroAmigavel(err)); } finally { setEnviando(false); }
   };
   const input = "mt-1 w-full rounded-xl border bg-card px-4 py-3 text-base";
@@ -46,14 +44,7 @@ function Cadastro() {
   return (
     <main className="mx-auto max-w-lg space-y-5 px-6 py-10">
       <Link to="/" className="flex items-center gap-2 font-extrabold text-primary"><img src={logo} alt="" className="size-10" /> Pontual+</Link>
-      {pronto ? (
-        <div className="space-y-3 text-center">
-          <MailCheck className="mx-auto size-12 text-ok" />
-          <h1 className="text-2xl font-extrabold">Quase lá!</h1>
-          <p>Confirme o e-mail <b>{f.email}</b> pelo link enviado e depois entre no Pontual+. A escola ficará <b>aguardando verificação</b> e o acesso será liberado após a aprovação.</p>
-          <Link to="/auth" className="block rounded-xl bg-primary py-4 font-extrabold text-primary-foreground">Ir para entrar</Link>
-        </div>
-      ) : (
+      {(
         <form onSubmit={enviar} className="space-y-4">
           <h1 className="text-2xl font-extrabold">Cadastrar escola</h1>
           <p className="text-muted-foreground">O cadastro passa por verificação antes de liberar o acesso.</p>

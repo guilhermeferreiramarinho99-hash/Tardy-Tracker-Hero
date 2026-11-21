@@ -1,7 +1,6 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { toast } from "sonner";
-import { MailCheck } from "lucide-react";
 import { criarConta } from "@/lib/cadastro";
 import { erroAmigavel } from "@/lib/api";
 
@@ -26,28 +25,20 @@ function Convite() {
   const navigate = useNavigate();
   const [f, setF] = useState({ codigo: inicial ?? "", nome: "", email: "", senha: "" });
   const [enviando, setEnviando] = useState(false);
-  const [pronto, setPronto] = useState(false);
   const set = (k: keyof typeof f) => (e: React.ChangeEvent<HTMLInputElement>) => setF({ ...f, [k]: e.target.value });
   const enviar = async (e: React.FormEvent) => {
     e.preventDefault();
     setEnviando(true);
     try {
       const r = await criarConta(f.nome, f.email, f.senha, { tipo: "convite", codigo: f.codigo.trim() });
-      if (r.logado) navigate({ to: "/inicio" }); else setPronto(true);
+      if (r.logado) navigate({ to: "/inicio" });
     } catch (err) { toast.error(erroAmigavel(err)); } finally { setEnviando(false); }
   };
   const input = "w-full rounded-xl border bg-card px-4 py-4 text-lg";
   return (
     <main className="mx-auto max-w-sm space-y-5 px-6 py-10">
       <Link to="/" className="font-extrabold text-primary">← Pontual+</Link>
-      {pronto ? (
-        <div className="space-y-3 text-center">
-          <MailCheck className="mx-auto size-12 text-ok" />
-          <h1 className="text-2xl font-extrabold">Confirme seu e-mail</h1>
-          <p>Enviamos um link para <b>{f.email}</b>. Depois de confirmar, entre no Pontual+ e o convite será usado automaticamente.</p>
-          <Link to="/auth" className="block rounded-xl bg-primary py-4 font-extrabold text-primary-foreground">Ir para entrar</Link>
-        </div>
-      ) : (
+      {(
         <form onSubmit={enviar} className="space-y-4">
           <h1 className="text-2xl font-extrabold">Aceitar convite</h1>
           <p className="text-muted-foreground">Use o código que a administração da escola enviou e crie sua própria senha.</p>

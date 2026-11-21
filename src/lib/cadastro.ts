@@ -13,7 +13,13 @@ export async function criarConta(nome: string, email: string, senha: string, ras
     if (/registered|exists/i.test(error.message)) throw new Error("Este e-mail já tem conta. Entre com ele e use o convite pela tela da escola.");
     throw error;
   }
-  return { logado: !!data.session };
+  if (!data.session) {
+    const entrada = await supabase.auth.signInWithPassword({ email: email.trim(), password: senha });
+    if (entrada.error || !entrada.data.session) {
+      throw new Error("Não foi possível entrar na conta. Tente entrar com seu e-mail e senha ou use Recuperar senha.");
+    }
+  }
+  return { logado: true };
 }
 
 export async function aplicarRascunho(r: Rascunho) {

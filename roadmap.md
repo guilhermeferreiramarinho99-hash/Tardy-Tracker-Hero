@@ -1,6 +1,7 @@
 # Login próprio, cadastro de escolas e relatórios
 
 ## Pedido atual
+- [x] Retirar confirmação por e-mail do cadastro e melhorar a entrada com senha; preservar aprovação e convites da escola. Configuração aplicada; testes do cadastro aprovados; página inicial conferida com sessão autenticada no celular.
 - [ ] Opção de excluir usuários — aguardando esclarecer o “Não” enviado pelo usuário.
 - [ ] Baixar backup de alunos, turmas e atrasos, com códigos escolares como texto (ex.: 002) — aguardando esclarecer o “Não”.
 

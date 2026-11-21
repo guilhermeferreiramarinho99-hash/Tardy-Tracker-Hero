@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import logo from "@/assets/logo.png";
+import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/auth")({
   head: () => ({
@@ -45,7 +46,7 @@ function Auth() {
       const email = await resolverEmail(login);
       if (modo === "entrar") {
         const { error } = email ? await supabase.auth.signInWithPassword({ email, password: senha }) : { error: true };
-        if (error) throw new Error("Usuário ou senha incorretos, ou acesso ainda não autorizado. Se acabou de criar a conta, confirme pelo link enviado ao seu e-mail.");
+        if (error) throw new Error("Não foi possível entrar. Confira seu usuário ou e-mail e sua senha. Se não lembrar a senha, toque em ‘Esqueci minha senha’.");
       } else {
         if (email) await supabase.auth.resetPasswordForEmail(email, { redirectTo: window.location.origin + "/reset-password" });
         toast.success("Se a conta existir, você receberá um link no e-mail para criar nova senha.");
@@ -71,9 +72,9 @@ function Auth() {
           <h1 className="text-2xl font-extrabold">{modo === "entrar" ? "Entrar" : "Recuperar senha"}</h1>
           <input required aria-label="Usuário ou e-mail" placeholder="Usuário ou e-mail" autoComplete="username" autoCapitalize="none" value={login} onChange={(e) => setLogin(e.target.value)} className={input} />
           {modo === "entrar" && <input required aria-label="Senha" type="password" placeholder="Senha" autoComplete="current-password" value={senha} onChange={(e) => setSenha(e.target.value)} className={input} />}
-          <button disabled={enviando} className="w-full rounded-xl bg-primary py-4 text-lg font-extrabold text-primary-foreground disabled:opacity-50">
-            {modo === "entrar" ? "Entrar" : "Enviar link"}
-          </button>
+          <Button type="submit" disabled={enviando} className="h-14 w-full rounded-xl text-lg font-extrabold">
+            {enviando ? "Aguarde…" : modo === "entrar" ? "Entrar" : "Enviar link"}
+          </Button>
           <div className="flex flex-col gap-3 pt-2 text-center font-semibold text-primary">
             {modo === "entrar"
               ? <button type="button" onClick={() => setModo("esqueci")}>Esqueci minha senha</button>
