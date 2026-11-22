@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { Search } from "lucide-react";
+import { ExcluirAluno } from "@/components/ExcluirAluno";
 import { pageHead } from "@/lib/page-head";
 import { PageHeader, SemPermissao, Status } from "@/components/AppShell";
 import { combinaBusca, hojeISO, periodoDe, useAlunos, useAtrasos, useMe, usePeriodos, useTurmas } from "@/lib/api";
@@ -41,8 +42,8 @@ function Alunos() {
             const r = p ? (atrasos ?? []).filter((x) => x.aluno_id === a.id && x.data >= p.inicio && x.data <= p.fim) : [];
             const sj = r.filter((x) => !x.justificado).length;
             return (
-              <li key={a.id}>
-                <Link to="/alunos/$id" params={{ id: a.id }} className="flex flex-wrap items-center justify-between gap-2 px-4 py-4">
+              <li key={a.id} className="flex flex-wrap items-center gap-2 px-4 py-4">
+                <Link to="/alunos/$id" params={{ id: a.id }} className="flex min-w-0 flex-1 flex-wrap items-center justify-between gap-2">
                   <div>
                     <div className="font-bold">{a.nome}{!a.ativo && <span className="ml-2 text-xs text-muted-foreground">(inativo)</span>}</div>
                     <div className="text-sm text-muted-foreground">{turmas?.find((t) => t.id === a.turma_id)?.nome} · {a.codigo}</div>
@@ -52,6 +53,7 @@ function Alunos() {
                     <Status tipo={r.length === 0 ? "ok" : sj > 0 ? "late" : "justified"} />
                   </div>
                 </Link>
+                <ExcluirAluno aluno={a} />
               </li>
             );
           })}

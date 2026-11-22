@@ -1,6 +1,7 @@
 # Login próprio, cadastro de escolas e relatórios
 
 ## Pedido atual
+- [x] Excluir alunos pela lista Alunos e pela Administração, com confirmação e proteção do histórico existente.
 - [x] Retirar qualquer opção visível de cadastrar escola, inclusive na entrada; endereço antigo redireciona para o login, conferido no celular.
 - [x] Senha adicional da escola antes do login, troca pela administração e testes; contas individuais preservadas, fluxo offline existente mantido. Entrada correta/incorreta, persistência e formulário da administração conferidos; rotação e permissões testadas em banco descartável.
 - [x] Adaptar a entrada para a Escola Estadual Menodora Fialho de Figueiredo e bloquear novos cadastros de escolas; dados e vínculos existentes preservados. Testes de permissões aprovados e entrada conferida no celular e computador.

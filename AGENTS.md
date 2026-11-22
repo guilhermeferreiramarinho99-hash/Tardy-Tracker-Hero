@@ -11,6 +11,7 @@
 
 - All writes to official records (atrasos, alertas, roles) go through SECURITY DEFINER RPCs that check roles and write auditoria; tables expose SELECT only via RLS — keeps permission logic in the database, not the UI.
 - Client data hooks live in src/lib/api.ts (react-query over the browser Supabase client); protected pages live under src/routes/_authenticated/.
+- Student deletion controls share ExcluirAluno across the student list and administration, calling the existing audited RPC; this keeps confirmation and history protection consistent.
 - Account creation must return success only with a valid session, using password sign-in as a fallback when signup returns none; this prevents navigation into protected pages while signed out.
 - The root entry reuses the password sign-in screen and school identity from a shared module; school-creation RPC execution is revoked while existing memberships and tenant protections remain intact to preserve historical data.
 - Each account has one immutable school membership; school-owned rows use restrictive tenant RLS plus validation triggers and scoped SECURITY DEFINER RPC lookups. Why: neither guessed record IDs nor school administrator roles may cross tenant boundaries.
